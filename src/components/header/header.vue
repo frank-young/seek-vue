@@ -30,7 +30,35 @@
     <div class="background">
     	<img :src="seller.avatar" width="100%" >
     </div>
-    <div v-show="detailShow" class="detail"></div>
+    <div v-show="detailShow" class="detail">
+    	<div class="detail-main">
+    		<div class="detail-name">
+    			{{seller.name}}
+    		</div>
+    		<div class="detail-ratings">
+    			{{seller.score}}
+    			<!-- <span class="icon" v-bind:class="classMap[support.type]"></span> -->
+    		</div>
+    		<div class="detail-sub-title">
+    			优惠信息
+    		</div>
+    		<div class="detail-supports">
+    			<div class="detail-list support" v-for=" support in seller.supports">
+    				<span class="icon" v-bind:class="classMap[support.type]"></span>
+    				{{support.description}}
+    			</div>
+    		</div>
+    		<div class="detail-sub-title">
+    			商家公告
+    		</div>
+    		<div class="detail-bulletin">
+    			{{seller.bulletin}}
+    		</div>
+    	</div>
+    	<div class="detail-close">
+    		<i class="icon-close" v-on:click="hideDetail"></i>
+    	</div>
+    </div>
   </div>
 </template>
 
@@ -49,6 +77,9 @@ export default {
   methods: {
     showDetail() {
       this.detailShow = true
+    },
+    hideDetail() {
+      this.detailShow = false
     }
   },
   created() {
@@ -206,6 +237,76 @@ export default {
 			height: 100%;
 			overflow: auto;
 			background-color: rgba(7, 17, 27, 0.8);
+			&-main{
+				min-height: 100%;
+				padding: 64px 36px;
+				.box-sizing();
+			}
+			&-name{
+				font-size: 16px;
+				line-height: 16px;
+				color: @gf;
+				font-weight: 700;
+				text-align: center;
+				.m(b,16px);
+			}
+			&-ratings{
+				height: 24px;
+				.ta(c);
+			}
+			&-sub-title{
+				.pos(r);
+				.m(t,28px);
+				.m(b,24px);
+				.ta(c);
+				font-size: 14px;
+				font-weight: 700;
+				line-height: 14px;
+				color: @gf;
+				&:before,
+				&:after{
+					content: '';
+					.pos(a);
+					top: 7px;
+					height: 1px;
+					width: 112px;
+					background-color: rgba(255, 255, 255, 0.2);
+				}
+				&:before{
+					left: 0;
+				}
+				&:after{
+					right: 0;
+				}
+			}
+			&-list{
+				padding: 0 12px;
+				font-size: 12px;
+				line-height: 12px;
+				font-weight: 200;
+				.m(b,6px);
+				height: 16px;
+				&:last-child{
+					.m(b,0);
+				}
+			}
+			&-supports{
+
+			}
+			&-bulletin{
+				padding: 0 12px;
+				font-size: 12px;
+				font-weight: 200;
+				line-height: 24px;
+				color: #fff;
+
+			}
+			&-close{
+				.ta(c);
+				margin-top: -64px;
+				font-size: 32px;
+				color: rgba(255, 255, 255, 0.5)
+			}
 		}
 	}
 
