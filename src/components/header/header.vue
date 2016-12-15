@@ -36,8 +36,7 @@
     			{{seller.name}}
     		</div>
     		<div class="detail-ratings">
-    			{{seller.score}}
-    			<!-- <span class="icon" v-bind:class="classMap[support.type]"></span> -->
+    			<star v-bind:size="48" v-bind:score="seller.score"></star>
     		</div>
     		<div class="detail-sub-title">
     			优惠信息
@@ -63,6 +62,8 @@
 </template>
 
 <script>
+import star from 'components/star/star'
+
 export default {
   props: {
     seller: {
@@ -84,6 +85,9 @@ export default {
   },
   created() {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+  },
+  components: {
+    star
   }
 }
 </script>
