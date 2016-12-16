@@ -1,6 +1,6 @@
 <template>
   <div class="star" v-bind:class="starType">
-    <span v-for="itemclass in itemClasses" v-bind:class="itemClass" class="itemClass"></span>
+    <span v-for="itemClass in itemClasses" v-bind:class="itemClass" class="star-item"></span>
   </div>
 </template>
 
@@ -17,29 +17,31 @@ export default {
     },
     score: {
       type: Number
+    }
+  },
+  computed: {
+    starType() {
+      return 'star-' + this.size
     },
-    computed: {
-      startType() {
-        return 'star-' + this.size
-      },
-      itemClasses() {
-        let result = []
-        let score = Math.floor(this.score * 2) / 2
-        let hasDecimal = score % 1 !== 0
-        let integer = Math.floor(score)
+    itemClasses() {
+      let result = []
+      let score = Math.floor(this.score * 2) / 2
+      let hasDecimal = score % 1 !== 0
+      let integer = Math.floor(score)
 
-        for (let i = 0; i < integer; i++) {
-          result.push(CLS_ON)
-        }
-
-        if (hasDecimal) {
-          result.push(CLS_HALF)
-        }
-
-        while (result.length < LENGTH) {
-          result.push(CLS_OFF)
-        }
+      for (let i = 0; i < integer; i++) {
+        result.push(CLS_ON)
       }
+
+      if (hasDecimal) {
+        result.push(CLS_HALF)
+      }
+
+      while (result.length < LENGTH) {
+        result.push(CLS_OFF)
+      }
+      console.log(result)
+      return result
     }
   }
 }
@@ -64,16 +66,16 @@ export default {
 				&:last-child {
 					margin-right: 0;
 				}
-				// &.on{
-				// 	.bg-image('./img/start48');
-				// }
-				
-				// &.half{
-				// 	.bg-image('./img/start48_half');
-				// }
-				// &.off{
-				// 	.bg-image('./img/start48_off');
-				// }
+				&.on{
+					.bg-image("./img/star48_on");
+				}
+
+				&.half{
+					.bg-image('./img/star48_half');
+				}
+				&.off{
+					.bg-image('./img/star48_off');
+				}
 			}
 		}
 		&.star-36{
@@ -85,15 +87,15 @@ export default {
 				&:last-child {
 					margin-right: 0;
 				}
-				// &.on{
-				// 	.bg-image('./img/start36');
-				// }
-				// &.half{
-				// 	.bg-image('./img/start36_half');
-				// }
-				// &.off{
-				// 	.bg-image('./img/start36_off');
-				// }
+				&.on{
+					.bg-image('./img/star36_on');
+				}
+				&.half{
+					.bg-image('./img/star36_half');
+				}
+				&.off{
+					.bg-image('./img/star36_off');
+				}
 			}
 		}
 		&.star-24{
@@ -105,15 +107,15 @@ export default {
 				&:last-child {
 					margin-right: 0;
 				}
-				// &.on{
-				// 	.bg-image('./img/start24');
-				// }
-				// &.half{
-				// 	.bg-image('./img/start24_half');
-				// }
-				// &.off{
-				// 	.bg-image('./img/start24_off');
-				// }
+				&.on{
+					.bg-image('./img/star24_on');
+				}
+				&.half{
+					.bg-image('./img/star24_half');
+				}
+				&.off{
+					.bg-image('./img/star24_off');
+				}
 			}
 		}
 
