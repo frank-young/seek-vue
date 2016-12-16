@@ -67,6 +67,7 @@ export default {
 				// &.on{
 				// 	.bg-image('./img/start48');
 				// }
+				
 				// &.half{
 				// 	.bg-image('./img/start48_half');
 				// }
@@ -118,14 +119,14 @@ export default {
 
 	}
 
-	// .bg-image(@url){
-	//   @src:~`@{url} + '@2x.png'`;
-	//   background-image: url(@src);
-	// }
-	// @media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3){
-	//   .bg-image(@url){
-	//     @src:~`@{url} + '@3x.png'`;
-	//     background-image: url(@src);
-	//   }
-	// }
+	.bg-image(@url){
+	  @src:~`@{url} + '@2x.png'`;
+	  background-image: url(@src);
+	}
+	@media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3){
+	  .bg-image(@url){
+	    @src:~`@{url} + '@3x.png'`;
+	    background-image: url(@src);
+	  }
+	}
 </style>
