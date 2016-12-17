@@ -140,6 +140,21 @@
 }
 
 //其他公共样式 动画，边框，阴影
+.bg(@bg){
+    background-color: @bg;
+}
+.border-1px{
+    &:after{
+        content: '';
+        .pos(a);
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: @line;
+        .scale(1,.5);
+    }
+}
 .box-sizing(){
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

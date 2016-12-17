@@ -1,20 +1,232 @@
 <template>
-  <div class="goods">
-    {{ msg }}
-  </div>
+  	<div class="goods">
+  		<div class="menu-wrap" ref="menuWrap">
+  			<ul>
+  				<li v-for="item in goods" class="menu-item">
+  					<span class="text">
+  						<span v-show="item.type>0" class="icon" v-bind:class="classMap[item.type]"></span> {{item.name}}
+  					</span>
+  				</li>
+  			</ul>
+  		</div>
+  		<div class="foods-wrap" ref="foodWrap">
+  			<ul>
+  				<li v-for="item in goods" class="food-list">
+  					<h2 class="title">{{item.name}} </h2>
+  					<ul>
+  						<li v-for="food in item.foods" class="food-item">
+  							<div class="icon"><img :src="food.icon" alt=""></div>
+  							<div class="content">
+  								<h3 class="name">{{food.name}}</h3>
+  								<p class="desc">{{food.description}}</p>
+  								<div class="extra">
+  									<span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}% </span>
+  								</div>
+  								<div class="price">
+  									<span class="now">¥{{food.price}} </span><span class="old" v-show="food.oldPrice">
+  										¥{{food.oldPrice}}
+  									</span>
+  								</div>
+  							</div>
+  						</li>
+  					</ul>
+  				</li>
+  			</ul>
+  		</div>
+  	</div>
 </template>
 
 <script>
+import BScroll from 'better-scroll'
+
+const ERR_OK = 0
+
 export default {
-  name: 'goods',
-  data () {
-    return {
-      msg: '商品!'
-    }
-  }
+	props: {
+		seller: {
+			type: Object
+		}
+	},
+	data() {
+		return {
+			goods: []
+		}
+	},
+	created() {
+		this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+		this.$http.get('/api/goods').then((res) => {
+			res = res.body
+            if (res.errno === ERR_OK) {
+                this.goods = res.data
+                this.$nextTick(() => {
+					this._initScroll()
+                })
+            }
+		})
+	},
+	methods: {
+		_initScroll() {
+			this.menuScroll = new BScroll(this.$refs.menuWrap, {})
+			this.foodsScroll = new BScroll(this.$refs.foodWrap, {})
+		}
+	}
 }
 </script>
 
-<style>
+<style lang="less">
+	@import '../../common/less/base.less';
 
+	.goods{
+		.pos(a);
+		top: 174px;
+		bottom: 46px;
+		display: flex;
+		width: 100%;
+		overflow: hidden;
+		.menu-wrap{
+			flex: 0 0 90px;
+			width: 90px;
+			.bg(#f3f5f7);
+			.menu-item{
+				position: relative;
+				display: table;
+				height: 54px;
+				width: 90px;
+				line-height: 14px;
+				.icon{
+					.ds(ib);
+					vertical-align: top;
+					width: 12px;
+					height: 12px;
+					margin-right: 2px;
+					background-size: 12px 12px;
+					background-repeat: no-repeat;
+					&.decrease{
+						.bg-image('./img/decrease_3');
+					}
+					&.discount{
+						.bg-image('./img/discount_3');
+					}
+					&.guarantee{
+						.bg-image('./img/guarantee_3');
+					}
+					&.invoice{
+						.bg-image('./img/invoice_3');
+					}
+					&.special{
+						.bg-image('./img/special_3');
+					}
+				}
+				.text{
+					display: table-cell;
+					width: 56px;
+					vertical-align: middle;
+					font-size: 12px;
+					text-align: center;
+					padding: 0 12px;
+					.border-1px;
+					&:last-child:after{
+						display: none;
+					}
+				}
+			}
+		}
+		.foods-wrap{
+			flex: 1;
+			padding-bottom: 20px;
+			.title{
+				padding-left: 14px;
+				height: 26px;
+				line-height: 26px;
+				border-left: 2px solid #d9dde1;
+				font-size: 12px;
+				color: rgb(147,153,159);
+				background-color: #f3f5f7;
+			}
+			.food-item{
+				position: relative;
+				display: flex;
+				margin: 18px;
+				padding-bottom: 18px;
+				.border-1px;
+				&:last-child:after{
+					height: 0;
+					// margin-bottom: 0;
+				}
+				&:last-child{
+					margin-bottom: 0;
+				}
+				.icon{
+					width: 57px;
+					margin-right: 10px;
+					img{
+						width: 57px;
+					}
+				}
+				.content{
+					flex:1;
+					.name{
+						margin: 2px 0 8px 0;
+						height: 14px;
+						font-size: 14px;
+						line-height: 14px;
+						color: rgb(7,17,27);
+					}
+					.desc,.extra{
+						font-size: 10px;
+						line-height: 12px;
+						color: rgb(147,153,159);
+					}
+					.desc{
+						margin-bottom: 8px;
+					}
+					.extra{
+						.count{
+							margin-right: 12px;
+						}
+					}
+					.price{
+						line-height: 24px;
+						.now{
+							font-weight: 700;
+							margin-right: 8px;
+							font-size: 14px;
+							color: rgb(240, 20, 20);
+						}
+						.old{
+							font-weight: 700;
+							font-size: 10px;
+							text-decoration: line-through;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.bg-image(@url){
+	  @src:~`@{url} + '@2x.png'`;
+	  background-image: url(@src);
+	}
+	@media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3){
+	  .bg-image(@url){
+	    @src:~`@{url} + '@3x.png'`;
+	    background-image: url(@src);
+	  }
+	}
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
