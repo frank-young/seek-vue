@@ -62,12 +62,12 @@ export default {
 				transform: rotate(0);
 				transition: all 0.3s;
 			}
-			&.move-transition{
+			&.move-enter-active,&.move-leave{
 				opacity: 1;
 				transform: translate3D(0,0,0);
 			}
 			&.move-enter,
-			&.move-leave{
+			&.move-leave-active{
 				opacity: 0;
 				transform: translate3D(24px,0,0);
 				.inner{
@@ -83,7 +83,7 @@ export default {
 			text-align: center;
 			padding-top: 6px;
 			font-size: 10px;
-			color: rgb(147,153,159);
+			color: #333;
 		}
 		.cart-add{
 			
