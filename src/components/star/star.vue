@@ -18,7 +18,7 @@ export default {
 		score: {
 			type: Number
 		}
-		},
+	},
 	computed: {
 		starType() {
 			return 'star-' + this.size

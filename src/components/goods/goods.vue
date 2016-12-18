@@ -27,17 +27,23 @@
   										¥{{food.oldPrice}}
   									</span>
   								</div>
+  								<div class="cartcontrol-wrap">
+  									<cartcontrol :food="food"></cartcontrol>
+  								</div>
   							</div>
   						</li>
   					</ul>
   				</li>
   			</ul>
   		</div>
+  		<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   	</div>
 </template>
 
 <script>
 import BScroll from 'better-scroll'
+import shopcart from 'components/shopcart/shopcart'
+import cartcontrol from 'components/cartcontrol/cartcontrol'
 
 const ERR_OK = 0
 
@@ -64,6 +70,17 @@ export default {
 				}
 			}
 			return 0
+		},
+		selectFoods() {
+			let foods = []
+			this.goods.forEach((good) => {
+				good.foods.forEach((food) => {
+					if (food.count) {
+						foods.push(food)
+					}
+				})
+			})
+			return foods
 		}
 	},
 	created() {
@@ -85,6 +102,7 @@ export default {
 				click: true
 			})
 			this.foodsScroll = new BScroll(this.$refs.foodWrap, {
+				click: true,
 				probeType: 3
 			})
 			this.foodsScroll.on('scroll', (pos) => {
@@ -109,6 +127,10 @@ export default {
 			let el = foodList[index]
 			this.foodsScroll.scrollToElement(el, 300)
 		}
+	},
+	components: {
+		shopcart,
+		cartcontrol
 	}
 }
 </script>
@@ -254,6 +276,11 @@ export default {
 							font-size: 10px;
 							text-decoration: line-through;
 						}
+					}
+					.cartcontrol-wrap{
+						.pos(a);
+						right: 0;
+						bottom: 10px;
 					}
 				}
 			}
