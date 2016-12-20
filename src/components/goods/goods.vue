@@ -86,7 +86,7 @@ export default {
 	},
 	created() {
 		this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-		this.$http.get('/api/goods').then((res) => {
+		this.$http.get('http://127.0.0.1:3000/api/goods', {'Content-Type': 'application/json; charset=utf-8'}).then((res) => {
 			res = res.body
             if (res.errno === ERR_OK) {
                 this.goods = res.data
