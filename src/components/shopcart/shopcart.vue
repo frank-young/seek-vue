@@ -200,7 +200,7 @@ export default {
 				'petcardincome': 0,
 				'cardincome': 0,
 				'memberBalance': 0,
-				'eatType': '大厅',
+				'eatType': '大厅(微信点餐)',
 				'total': price,
 				'reduce': 0,
 				'reduceAfter': price,
