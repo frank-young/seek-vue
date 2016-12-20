@@ -46,6 +46,7 @@ import shopcart from 'components/shopcart/shopcart'
 import cartcontrol from 'components/cartcontrol/cartcontrol'
 
 const ERR_OK = 0
+const HOST = 'http://127.0.0.1:3000'
 
 export default {
 	props: {
@@ -86,7 +87,7 @@ export default {
 	},
 	created() {
 		this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-		this.$http.get('http://127.0.0.1:3000/api/goods', {'Content-Type': 'application/json; charset=utf-8'}).then((res) => {
+		this.$http.get(HOST + '/api/goods').then((res) => {
 			res = res.body
             if (res.errno === ERR_OK) {
                 this.goods = res.data

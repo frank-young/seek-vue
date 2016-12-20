@@ -58,6 +58,9 @@
 import BScroll from 'better-scroll'
 import cartcontrol from 'components/cartcontrol/cartcontrol'
 
+const HOST = 'http://127.0.0.1:3000'
+const STATUS = 1
+
 export default {
 	props: {
 		selectFoods: {
@@ -157,7 +160,71 @@ export default {
 			if (this.totalPrice < this.minPrice) {
 				return false
 			}
-			console.log('支付' + this.totalPrice)
+			console.log(this.selectFoods[0].count)
+			this._pay()
+		},
+		_pay() {
+			let options = {}
+			let data = {
+				'order': this._custroctData(this.selectFoods, this.totalPrice)
+			}
+			console.log(data)
+			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+			options.emulateJSON = true
+
+			this.$http.post(HOST + '/api/order', data, options).then((res) => {
+				res = res.body
+				if (res.status === STATUS) {
+					// console.log(res.msg)
+				}
+				console.log(res.msg)
+			})
+		},
+		_custroctData(foods, price) {
+			let obj = {
+				'isTop': false,
+				'isChecked': false,
+				'orderNum': '1232412341421',
+				'peopleNum': 1,
+				'payType': 1,
+				'payStatus': 1,
+				'noincome': 0,
+				'credit': 0,
+				'erase': 0,
+				'onceincome': 0,
+				'cashincome': 0,
+				'wxincome': price,
+				'alipayincome': 0,
+				'schoolincome': 0,
+				'otherincome': 0,
+				'petcardincome': 0,
+				'cardincome': 0,
+				'memberBalance': 0,
+				'eatType': '大厅',
+				'total': price,
+				'reduce': 0,
+				'reduceAfter': price,
+				'realTotal': price,
+				'isMember': false,
+				'isPetcard': false,
+				'dish': []
+			}
+
+			obj.dish = this._foods(foods)
+			return obj
+		},
+		_foods(data) {
+			let arr = []
+			if (data) {
+				data.forEach((d) => {
+					let obj = {}
+					obj.name = d.name
+					obj.price = d.price
+					obj.number = d.count
+					arr.push(obj)
+				})
+				return arr
+			}
 		}
 	},
 	components: {
