@@ -220,6 +220,7 @@ export default {
 					let obj = {}
 					obj.name = d.name
 					obj.price = d.price
+					obj.reducePrice = d.price
 					obj.number = d.count
 					arr.push(obj)
 				})
