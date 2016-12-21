@@ -198,7 +198,7 @@ export default {
 				'schoolincome': 0,
 				'otherincome': 0,
 				'petcardincome': 0,
-				'cardincome': 0,
+				'cardincome': 0, 
 				'memberBalance': 0,
 				'eatType': '大厅(微信点餐)',
 				'total': price,
