@@ -81,6 +81,10 @@ export default {
 		deliveryPrice: {
 			type: Number,
 			default: 0
+		},
+		domain: {
+			type: String,
+			default: 'seek02'
 		}
 	},
 	data() {
@@ -166,9 +170,10 @@ export default {
 		_pay() {
 			let options = {}
 			let data = {
-				'order': this._custroctData(this.selectFoods, this.totalPrice)
+				'domain': this.domain,
+				'order': this._orderData(this.selectFoods, this.totalPrice, this.domain)
 			}
-			console.log(data)
+
 			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 			options.emulateJSON = true
 
@@ -180,11 +185,10 @@ export default {
 				console.log(res.msg)
 			})
 		},
-		_custroctData(foods, price) {
+		_orderData(foods, price, domain) {
 			let obj = {
 				'isTop': false,
 				'isChecked': false,
-				'orderNum': '1232412341421',
 				'peopleNum': 1,
 				'payType': 1,
 				'payStatus': 1,
@@ -198,7 +202,7 @@ export default {
 				'schoolincome': 0,
 				'otherincome': 0,
 				'petcardincome': 0,
-				'cardincome': 0, 
+				'cardincome': 0,
 				'memberBalance': 0,
 				'eatType': '大厅(微信点餐)',
 				'total': price,
@@ -209,7 +213,7 @@ export default {
 				'isPetcard': false,
 				'dish': []
 			}
-
+			obj.orderNum = this._createOrderNum(domain)
 			obj.dish = this._foods(foods)
 			return obj
 		},
@@ -226,6 +230,9 @@ export default {
 				})
 				return arr
 			}
+		},
+		_createOrderNum(domain) {
+			return domain + Math.round((Math.random() * (new Date() - 0)) * 10000) + ''
 		}
 	},
 	components: {
