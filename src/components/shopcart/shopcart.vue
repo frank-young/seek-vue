@@ -83,14 +83,16 @@ export default {
 			default: 0
 		},
 		domain: {
-			type: String,
-			default: 'seek02'
+			type: String
 		}
 	},
 	data() {
 		return {
 			fold: false
 		}
+	},
+	created() {
+
 	},
 	computed: {
 		totalPrice() {
@@ -164,7 +166,7 @@ export default {
 			if (this.totalPrice < this.minPrice) {
 				return false
 			}
-			console.log(this.selectFoods[0].count)
+
 			this._pay()
 		},
 		_pay() {
@@ -177,6 +179,7 @@ export default {
 			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 			options.emulateJSON = true
 
+			console.log(this.domain)
 			this.$http.post(HOST + '/api/order', data, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
@@ -213,6 +216,8 @@ export default {
 				'isPetcard': false,
 				'dish': []
 			}
+
+			obj.dishNum = decodeURI(this._getQueryString()['num'])
 			obj.orderNum = this._createOrderNum(domain)
 			obj.dish = this._foods(foods)
 			return obj
@@ -233,6 +238,18 @@ export default {
 		},
 		_createOrderNum(domain) {
 			return domain + Math.round((Math.random() * (new Date() - 0)) * 10000) + ''
+		},
+		_getQueryString(name) {
+			let arr = []
+			let	hash = []
+			let hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&')
+
+			for (let i = 0; i < hashes.length; i++) {
+				hash = hashes[i].split('=')
+				arr.push(hash[0])
+				arr[hash[0]] = hash[1]
+			}
+			return arr
 		}
 	},
 	components: {

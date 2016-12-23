@@ -36,7 +36,7 @@
   				</li>
   			</ul>
   		</div>
-  		<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+  		<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :domain="domain"></shopcart>
   	</div>
 </template>
 
@@ -58,7 +58,8 @@ export default {
 		return {
 			goods: [],
 			listHeight: [],
-			scrollY: 0
+			scrollY: 0,
+			domain: decodeURI(this._getQueryString('domain'))
 		}
 	},
 	computed: {
@@ -128,6 +129,15 @@ export default {
 			let foodList = this.$refs.foodWrap.getElementsByClassName('food-list-hook')
 			let el = foodList[index]
 			this.foodsScroll.scrollToElement(el, 300)
+		},
+		_getQueryString(name) {
+			let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+			let r = window.location.search.substr(1).match(reg)
+			if (r != null) {
+				return unescape(r[2])
+            } else {
+				return null
+			}
 		}
 	},
 	components: {
