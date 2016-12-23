@@ -15,12 +15,12 @@
 	  					¥{{totalPrice}}
 	  				</div>
 	  				<div class="desc">
-	  					另需配送费¥{{deliveryPrice}} 元
+	  					<!-- 另需配送费¥{{deliveryPrice}} 元 -->
 	  				</div>
 	  			</div>
 	  			<div class="content-right" @click.stop.prevent="pay">
 	  				<div class="pay" :class="payClass">
-	  					{{payDesc}}
+	  					结算
 	  				</div>
 	  			</div>
 	  		</div>
@@ -168,6 +168,7 @@ export default {
 			}
 
 			this._pay()
+			// this.empty()
 		},
 		_pay() {
 			let options = {}

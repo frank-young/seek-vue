@@ -36,7 +36,7 @@
   				</li>
   			</ul>
   		</div>
-  		<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :domain="domain"></shopcart>
+  		<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="minPrice" :domain="domain"></shopcart>
   	</div>
 </template>
 
@@ -52,6 +52,10 @@ export default {
 	props: {
 		seller: {
 			type: Object
+		},
+		minPrice: {
+			type: Number,
+			default: 1
 		}
 	},
 	data() {
