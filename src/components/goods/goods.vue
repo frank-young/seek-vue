@@ -14,7 +14,7 @@
   				<li v-for="item in goods" class="food-list food-list-hook">
   					<h2 class="title">{{item.name}} </h2>
   					<ul>
-  						<li v-for="food in item.foods" class="food-item">
+  						<li @click="selectFood(food,$event)" v-for="food in item.foods" class="food-item">
   							<div class="icon"><img :src="food.icon" alt=""></div>
   							<div class="content">
   								<h3 class="name">{{food.name}}</h3>
@@ -37,6 +37,7 @@
   			</ul>
   		</div>
   		<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="minPrice" :domain="domain"></shopcart>
+  		<food :food="selectedFood" ref="food"></food>
   	</div>
 </template>
 
@@ -44,9 +45,10 @@
 import BScroll from 'better-scroll'
 import shopcart from 'components/shopcart/shopcart'
 import cartcontrol from 'components/cartcontrol/cartcontrol'
+import food from 'components/food/food'
 
 const ERR_OK = 0
-const HOST = 'http://127.0.0.1:3000'
+// const HOST = 'http://127.0.0.1:3000'
 
 export default {
 	props: {
@@ -63,7 +65,8 @@ export default {
 			goods: [],
 			listHeight: [],
 			scrollY: 0,
-			domain: decodeURI(this._getQueryString('domain'))
+			domain: decodeURI(this._getQueryString('domain')),
+			selectedFood: {}
 		}
 	},
 	computed: {
@@ -92,7 +95,7 @@ export default {
 	},
 	created() {
 		this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-		this.$http.get(HOST + '/api/goods').then((res) => {
+		this.$http.get('/api/goods').then((res) => {
 			res = res.body
             if (res.errno === ERR_OK) {
                 this.goods = res.data
@@ -134,6 +137,13 @@ export default {
 			let el = foodList[index]
 			this.foodsScroll.scrollToElement(el, 300)
 		},
+		selectFood(food, event) {
+			if (!event._constructed) {
+				return true
+			}
+			this.selectedFood = food
+			this.$refs.food.show()
+		},
 		_getQueryString(name) {
 			let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
 			let r = window.location.search.substr(1).match(reg)
@@ -146,7 +156,8 @@ export default {
 	},
 	components: {
 		shopcart,
-		cartcontrol
+		cartcontrol,
+		food
 	}
 }
 </script>

@@ -377,13 +377,13 @@ export default {
 			left: 0;
 			z-index: -1;
 			width: 100%;
-			transition: all .3s;
 			transform: translate3D(0,-100%,0);
+			&.fold-enter-active, &.fold-leave-active{
+				transform: translate3D(0,-100%,0);
+				transition: all .3s;
+			}
 			&.fold-enter, &.fold-leave-active{
 				transform: translate3D(0,0,0);
-			}
-			&.fold-enter-active, &.fold-leave{
-				transform: translate3D(0,-100%,0);
 			}
 			.list-header{
 				height: 40px;
@@ -446,16 +446,13 @@ export default {
 		width: 100%;
 		height: 100%;
 		z-index: 40;
-		transition: all .3s;
-		opacity: 1;
 		background-color: rgba(7, 17, 27, 0.6);
-		&.fade-enter, &.fade-leave-active{
-			opacity: 0;
-			background-color: rgba(7, 17, 27, 0);
-		}
-		&.fade-enter-active, &.fade-leave{
-			opacity: 1;
+		&.fade-enter-active, &.fade-leave-active{
+			transition: all .3s;
 			background-color: rgba(7, 17, 27, 0.6);
+		}
+		&.fade-enter, &.fade-leave-active{
+			background-color: rgba(7, 17, 27, 0);
 		}
 	}
 </style>
