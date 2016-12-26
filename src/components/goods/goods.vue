@@ -301,6 +301,7 @@ export default {
 						.old{
 							font-weight: 700;
 							font-size: 10px;
+							color: rgb(147,153,159);
 							text-decoration: line-through;
 						}
 					}
