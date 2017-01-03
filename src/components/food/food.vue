@@ -136,9 +136,15 @@ export default {
 				.back{
 					position: absolute;
 					top: 10px;
-					left: 0;
+					left: 10px;
+					width: 40px;
+					height: 40px;
+					line-height: 40px;
+					background-color: rgba(7, 17, 27, 0.5);
+					border-radius: 50%;
+					text-align: center;
 					i{
-						display: block;
+						display: inline-block;
 						padding: 10px;
 						font-size: 20px;
 						color: #fff;

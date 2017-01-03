@@ -20,7 +20,7 @@
 	  			</div>
 	  			<div class="content-right" @click.stop.prevent="pay">
 	  				<div class="pay" :class="payClass">
-	  					结算
+	  					去结算
 	  				</div>
 	  			</div>
 	  		</div>
@@ -51,12 +51,14 @@
 	  	<transition name="fade">
 	  		<div class="list-mask" v-show="listShow" @click="hideList"></div>
 	  	</transition>
+	  	<bill :foods="selectFoods" ref="bill"></bill>
    	</div>
 </template>
 
 <script>
 import BScroll from 'better-scroll'
 import cartcontrol from 'components/cartcontrol/cartcontrol'
+import bill from 'components/bill/bill'
 
 const HOST = 'http://127.0.0.1:3000'
 const STATUS = 1
@@ -166,8 +168,8 @@ export default {
 			if (this.totalPrice < this.minPrice) {
 				return false
 			}
-
-			this._pay()
+			this.$refs.bill.show()
+			// this._pay()
 			// this.empty()
 		},
 		_pay() {
@@ -254,7 +256,8 @@ export default {
 		}
 	},
 	components: {
-		cartcontrol
+		cartcontrol,
+		bill
 	}}
 </script>
 
@@ -357,7 +360,7 @@ export default {
 					height: 48px;
 					line-height: 48px;
 					text-align: center;
-					font-size: 12px;
+					font-size: 15px;
 					font-weight: 700;
 					.bg(rgba(255, 255, 255,0.2));
 					.c;
