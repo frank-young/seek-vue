@@ -1,11 +1,11 @@
 <template>
 	<transition name="move">
 		<div v-show="showFlag" class="bill" ref="billScroll">
-			<div class="back">
-				<i class="icon-arrow_lift" @click="hidden"></i>
-				<span class="back-txt">确认订单</span>
-			</div>
-			<div class="bill-content">
+			<div class="bill-content" >
+				<div class="bill-back">
+					<i class="icon-arrow_lift" @click="hidden"></i>
+					<span class="back-txt">确认订单</span>
+				</div>
 				<div class="title">西可咖啡</div>
 				<div class="dish">
 					<div class="dish-item" v-for="food in foods">
@@ -13,9 +13,37 @@
 						<div class="dish-count"><i>&times;</i>{{food.count}}</div>
 						<div class="dish-price">¥{{food.price}} </div>
 					</div>
+					
+				</div>
+				<div class="dish">
 					<div class="dish-item">
 						<div class="dish-name"></div>
 						<div class="dish-t-price"><span>待支付</span>¥{{totalPrice}}</div>
+					</div>
+				</div>
+				<split></split>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">支付方式</div>
+						<div class="dish-other"><span>在线支付</span></div>
+					</div>
+				</div>
+				<div class="other">
+					<div class="other-item">
+						<select class="other-select" v-model="dishNumber" id="">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+						</select>
+						<div class="dish-name">用餐人数</div>
+						<div class="dish-other"><span v-show="dishNumber===1">选择用餐人数</span><span v-show="dishNumber!==1">{{dishNumber}}人</span> </div>
 					</div>
 				</div>
 				<split></split>
@@ -28,7 +56,7 @@
 				</div>
 				<div class="foot-right" @click.stop.prevent="pay">
 	  				<div class="pay">
-	  					提交订单
+	  					<router-link class="pay" to="/pay">提交订单</router-link>
 	  				</div>
 	  			</div>
 			</div>
@@ -39,7 +67,6 @@
 <script>
 import BScroll from 'better-scroll'
 import split from 'components/split/split'
-import back from 'components/back/back'
 
 export default {
 	props: {
@@ -49,7 +76,8 @@ export default {
 	},
 	data() {
 		return {
-			showFlag: false
+			showFlag: false,
+			dishNumber: 1
 		}
 	},
 	computed: {
@@ -76,11 +104,87 @@ export default {
 		},
 		hidden() {
 			this.showFlag = false
+		},
+		pay() {
+			if (this.totalPrice < this.minPrice) {
+				return false
+			}
+			this._saveBillInfo()
+		},
+		_saveBillInfo() {
+			let data = {
+				'domain': this.domain,
+				'order': this._orderData(this.selectFoods, this.totalPrice, this.domain)
+			}
+
+			window.localStorage.setItem('bill', JSON.stringify(data))
+		},
+		_orderData(foods, price, domain) {
+			let obj = {
+				'isTop': false,
+				'isChecked': false,
+				'peopleNum': 1,
+				'payType': 1,
+				'payStatus': 1,
+				'noincome': 0,
+				'credit': 0,
+				'erase': 0,
+				'onceincome': 0,
+				'cashincome': 0,
+				'wxincome': price,
+				'alipayincome': 0,
+				'schoolincome': 0,
+				'otherincome': 0,
+				'petcardincome': 0,
+				'cardincome': 0,
+				'memberBalance': 0,
+				'eatType': '大厅(微信点餐)',
+				'total': price,
+				'reduce': 0,
+				'reduceAfter': price,
+				'realTotal': price,
+				'isMember': false,
+				'isPetcard': false,
+				'dish': []
+			}
+
+			obj.dishNum = decodeURI(this._getQueryString()['num'])
+			obj.orderNum = this._createOrderNum(domain)
+			obj.dish = this._foods(foods)
+			return obj
+		},
+		_foods(data) {
+			let arr = []
+			if (data) {
+				data.forEach((d) => {
+					let obj = {}
+					obj.name = d.name
+					obj.price = d.price
+					obj.reducePrice = d.price
+					obj.number = d.count
+					arr.push(obj)
+				})
+				return arr
+			}
+		},
+		_createOrderNum(domain) {
+			return domain + Math.round((Math.random() * (new Date() - 0)) * 10000) + ''
+		},
+		_getQueryString(name) {
+			let arr = []
+			let	hash = []
+			let hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&')
+
+			for (let i = 0; i < hashes.length; i++) {
+				hash = hashes[i].split('=')
+				arr.push(hash[0])
+				arr[hash[0]] = hash[1]
+			}
+			return arr
 		}
 	},
 	components: {
-		split,
-		back
+		split
 	}
 }
 </script>
@@ -115,17 +219,11 @@ export default {
 		&.move-enter, &.move-leave-active {
 			transform: translate3D(100%,0,0);
 		}
-		.bill-content{
-			margin-top: 48px;
-		}
-		.back{
-			position: fixed;
-			top: 0;
-			left: 0;
+		.bill-back{
 			width: 100%;
 			height: 48px;
 			line-height: 48px;
-			background-color: #00a0dc;
+			background-color: #3290e8;
 			i{
 				display: inline-block;
 				font-size: 14px;
@@ -139,6 +237,7 @@ export default {
 			}
 		}
 		.bill-content{
+			padding-bottom: 48px;
 			.title{
 				padding: 15px;
 				font-size: 15px;
@@ -147,14 +246,19 @@ export default {
 			.dish{
 				.b-1px();
 			}
-			.dish-item{
+			.other{
+				.b-1px();
+			}
+			.dish-item,
+			.other-item{
 				padding: 15px;
 				font-size: 14px;
 				display: flex;
+				
 			}
 			.dish-name{
 				flex: 1;
-				color: #555;
+				color: #222;
 			}
 			.dish-count,
 			.dish-price{
@@ -179,10 +283,35 @@ export default {
 				width: 100px;
 				text-align: right;
 				font-weight: normal;
-				color: #333;
+				color: #f60;
 				span{
 					color: #333;
-					margin-right: 5px;
+					margin-right: 10px;
+				}
+			}
+			.dish-other{
+				flex: 0 0 100px;
+				width: 100px;
+				text-align: right;
+				span{
+					font-weight: normal;
+					color: #666;
+					font-size: 12px;
+					line-height: 12px;
+				}
+				
+			}
+			.other-item{
+				position: relative;
+				.other-select{
+					position: absolute;
+					left: 0;
+					top: 0;
+					width: 100%;
+					height: 44px;
+					outline: none;
+					opacity: 0;
+
 				}
 			}
 		}
@@ -215,7 +344,7 @@ export default {
 					text-align: center;
 					font-size: 15px;
 					font-weight: 700;
-					background-color: #00b43c;
+					background-color: #4cda64;
 					color: #fff;
 				}
 			}

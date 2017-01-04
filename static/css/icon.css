@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sell-icon';
-  src:  url('../fonts/sell-icon.eot?y27rwy');
-  src:  url('../fonts/sell-icon.eot?y27rwy#iefix') format('embedded-opentype'),
-    url('../fonts/sell-icon.ttf?y27rwy') format('truetype'),
-    url('../fonts/sell-icon.woff?y27rwy') format('woff'),
-    url('../fonts/sell-icon.svg?y27rwy#sell-icon') format('svg');
+  src:  url('../fonts/sell-icon.eot?t4iz9v');
+  src:  url('../fonts/sell-icon.eot?t4iz9v#iefix') format('embedded-opentype'),
+    url('../fonts/sell-icon.ttf?t4iz9v') format('truetype'),
+    url('../fonts/sell-icon.woff?t4iz9v') format('woff'),
+    url('../fonts/sell-icon.svg?t4iz9v#sell-icon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,34 +23,41 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
- 
-.icon-add_circle:before {
+
+.icon-member:before {
   content: "\e900";
 }
-.icon-arrow_lift:before {
+.icon-wechat:before {
   content: "\e901";
 }
-.icon-check_circle:before {
+.icon-add_circle:before {
   content: "\e902";
 }
-.icon-close:before {
+.icon-arrow_lift:before {
   content: "\e903";
 }
-.icon-favorite:before {
+.icon-check_circle:before {
   content: "\e904";
 }
-.icon-keyboard_arrow_right:before {
+.icon-close:before {
   content: "\e905";
 }
-.icon-remove_circle_outline:before {
+.icon-favorite:before {
   content: "\e906";
 }
-.icon-shopping_cart:before {
+.icon-keyboard_arrow_right:before {
   content: "\e907";
 }
-.icon-thumb_down:before {
+.icon-remove_circle_outline:before {
   content: "\e908";
 }
-.icon-thumb_up:before {
+.icon-shopping_cart:before {
   content: "\e909";
 }
+.icon-thumb_down:before {
+  content: "\e90a";
+}
+.icon-thumb_up:before {
+  content: "\e90b";
+}
+

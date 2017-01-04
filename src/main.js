@@ -5,6 +5,7 @@ import VueResource from 'vue-resource'
 import goods from 'components/goods/goods'
 import ratings from 'components/ratings/ratings'
 import seller from 'components/seller/seller'
+import pay from 'components/pay/pay'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
@@ -12,7 +13,8 @@ Vue.use(VueResource)
 const routes = [
   {path: '/goods', component: goods, name: '商品'},
   {path: '/ratings', component: ratings, name: '评价'},
-  {path: '/seller', component: seller, name: '商家'}
+  {path: '/seller', component: seller, name: '商家'},
+  {path: '/pay', component: pay, name: '在线支付'}
 ]
 
 const router = new VueRouter({

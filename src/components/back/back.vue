@@ -14,7 +14,7 @@ export default {
 	},
 	methods: {
 		back() {
-			window.local.go(-1)
+			window.history.go(-1)
 		}
 	}
 }
@@ -22,23 +22,20 @@ export default {
 
 <style lang="less">
 	.back{
-		position: fixed;
-		top: 0;
-		left: 0;
 		width: 100%;
-		height: 50px;
-		line-height: 50px;
-		background-color: #00a0dc;
+		height: 48px;
+		line-height: 48px;
+		background-color: #3290e8;
 		i{
 			display: inline-block;
-			font-size: 24px;
-			padding: 10px;
+			font-size: 14px;
+			padding: 10px 10px 10px 20px;
 			margin-right: 10px;
 			color: #fff;
 		}
 		.back-txt {
 			font-size: 16px;
 			color: #fff
-		}
+		}	
 	}
 </style>

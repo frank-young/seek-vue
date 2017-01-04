@@ -60,9 +60,6 @@ import BScroll from 'better-scroll'
 import cartcontrol from 'components/cartcontrol/cartcontrol'
 import bill from 'components/bill/bill'
 
-const HOST = 'http://127.0.0.1:3000'
-const STATUS = 1
-
 export default {
 	props: {
 		selectFoods: {
@@ -169,90 +166,6 @@ export default {
 				return false
 			}
 			this.$refs.bill.show()
-			// this._pay()
-			// this.empty()
-		},
-		_pay() {
-			let options = {}
-			let data = {
-				'domain': this.domain,
-				'order': this._orderData(this.selectFoods, this.totalPrice, this.domain)
-			}
-
-			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-			options.emulateJSON = true
-
-			console.log(this.domain)
-			this.$http.post(HOST + '/api/order', data, options).then((res) => {
-				res = res.body
-				if (res.status === STATUS) {
-					// console.log(res.msg)
-				}
-				console.log(res.msg)
-			})
-		},
-		_orderData(foods, price, domain) {
-			let obj = {
-				'isTop': false,
-				'isChecked': false,
-				'peopleNum': 1,
-				'payType': 1,
-				'payStatus': 1,
-				'noincome': 0,
-				'credit': 0,
-				'erase': 0,
-				'onceincome': 0,
-				'cashincome': 0,
-				'wxincome': price,
-				'alipayincome': 0,
-				'schoolincome': 0,
-				'otherincome': 0,
-				'petcardincome': 0,
-				'cardincome': 0,
-				'memberBalance': 0,
-				'eatType': '大厅(微信点餐)',
-				'total': price,
-				'reduce': 0,
-				'reduceAfter': price,
-				'realTotal': price,
-				'isMember': false,
-				'isPetcard': false,
-				'dish': []
-			}
-
-			obj.dishNum = decodeURI(this._getQueryString()['num'])
-			obj.orderNum = this._createOrderNum(domain)
-			obj.dish = this._foods(foods)
-			return obj
-		},
-		_foods(data) {
-			let arr = []
-			if (data) {
-				data.forEach((d) => {
-					let obj = {}
-					obj.name = d.name
-					obj.price = d.price
-					obj.reducePrice = d.price
-					obj.number = d.count
-					arr.push(obj)
-				})
-				return arr
-			}
-		},
-		_createOrderNum(domain) {
-			return domain + Math.round((Math.random() * (new Date() - 0)) * 10000) + ''
-		},
-		_getQueryString(name) {
-			let arr = []
-			let	hash = []
-			let hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&')
-
-			for (let i = 0; i < hashes.length; i++) {
-				hash = hashes[i].split('=')
-				arr.push(hash[0])
-				arr[hash[0]] = hash[1]
-			}
-			return arr
 		}
 	},
 	components: {
@@ -368,7 +281,7 @@ export default {
 						.bg(#2b333b);
 					}
 					&.enough{
-						.bg(#00b43c);
+						.bg(#4cda64);
 						color: @gf;
 					}
 				}
