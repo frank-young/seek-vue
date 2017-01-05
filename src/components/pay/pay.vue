@@ -1,8 +1,11 @@
 <template>
 	<transition name="move">
-		<div class="bill">
+		<div class="pay-wrap">
 			<div class="bill-content" >
 				<back :text="text"></back>
+				<div class="timer">
+					支付剩余时间：<span>{{timer}}</span>
+				</div>
 				<div class="other">
 					<div class="dish-item">
 						<div class="dish-name">订单名称</div>
@@ -29,6 +32,7 @@
 						<div class="pay-other"><span class="ico-check" v-show="!payTypeShow"></span></div>
 					</div>
 				</div>
+				<split></split>
 			</div>
 			<div class="foot">
 				<div class="foot-center" @click.stop.prevent="pay">
@@ -61,6 +65,18 @@ export default {
 		totalPrice() {
 			let p = Number(this.orderData.order.realTotal)
 			return p.toFixed(2)
+		},
+		timer() {
+			let i = 100
+
+			setInterval(function() {
+				if (i === 0) {
+					return 1
+				} else {
+					i--
+					return i
+				}
+			}, 1000)
 		}
 	},
 	methods: {
@@ -114,6 +130,18 @@ export default {
 			transform: scale(1,.5);
 		}
 	}
+	.timer{
+		height: 26px;
+		line-height: 26px;
+		text-align: center;
+		background-color: #fffeec;
+		border-bottom: 1px solid #e8e5e0;
+		color: #f60;
+		font-size: 12px;
+		span{
+			color: #f60;
+		}
+	}
 	.sub-title{
 		padding: 15px;
 		font-size: 12px;
@@ -140,7 +168,7 @@ export default {
 
 		}
 	}
-	.bill {
+	.pay-wrap {
 		position: fixed;
 		left: 0;
 		top: 0;
@@ -148,7 +176,7 @@ export default {
 		z-index: 60;
 		width: 100%;
 		height: 100%;
-		background-color: #fff;
+		background-color: #f3f5f7;
 		&.move-enter-active, &.move-leave-active {
 			transition: all .1s linear;
 			transform: translate3D(0,0,0);
@@ -157,7 +185,7 @@ export default {
 			transform: translate3D(100%,0,0);
 		}
 		.bill-content{
-			padding-bottom: 48px;
+			background-color: #fff;
 			.other{
 				.b-1px();
 			}
