@@ -13,7 +13,6 @@
 						<div class="dish-count"><i>&times;</i>{{food.count}}</div>
 						<div class="dish-price">¥{{food.price}} </div>
 					</div>
-					
 				</div>
 				<div class="dish">
 					<div class="dish-item">
@@ -114,9 +113,9 @@ export default {
 		_saveBillInfo() {
 			let data = {
 				'domain': this.domain,
-				'order': this._orderData(this.selectFoods, this.totalPrice, this.domain)
+				'order': this._orderData(this.foods, this.totalPrice, this.domain)
 			}
-
+			console.log(this.foods)
 			window.localStorage.setItem('bill', JSON.stringify(data))
 		},
 		_orderData(foods, price, domain) {
@@ -145,12 +144,10 @@ export default {
 				'realTotal': price,
 				'isMember': false,
 				'isPetcard': false,
-				'dish': []
+				'dish': this._foods(foods)
 			}
-
 			obj.dishNum = decodeURI(this._getQueryString()['num'])
 			obj.orderNum = this._createOrderNum(domain)
-			obj.dish = this._foods(foods)
 			return obj
 		},
 		_foods(data) {

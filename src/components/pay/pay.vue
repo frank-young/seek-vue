@@ -1,48 +1,46 @@
 <template>
-	<transition name="move">
-		<div class="pay-wrap">
-			<div class="bill-content" >
-				<back :text="text"></back>
-				<div class="timer">
-					支付剩余时间：<span>{{timer}}</span>
-				</div>
-				<div class="other">
-					<div class="dish-item">
-						<div class="dish-name">订单名称</div>
-						<div class="dish-other"><span>西可咖啡微信点餐</span></div>
-					</div>
-				</div>
-				<div class="other">
-					<div class="dish-item">
-						<div class="dish-name">支付金额</div>
-						<div class="pay-price">¥{{totalPrice}}</div>
-					</div>
-				</div>
-				<split></split>
-				<div class="sub-title">请选择支付方式</div>
-				<div class="other">
-					<div class="dish-item select-radio" @click="wechatPay">
-						<div class="dish-name"><i class="icon-wechat"></i>微信支付</div>
-						<div class="pay-other"><span class="ico-check" v-show="payTypeShow"></span></div>
-					</div>
-				</div>
-				<div class="other">
-					<div class="dish-item select-radio" @click="memberPay">
-						<div class="dish-name"><i class="icon-member"></i>会员卡支付</div>
-						<div class="pay-other"><span class="ico-check" v-show="!payTypeShow"></span></div>
-					</div>
-				</div>
-				<split></split>
+	<div class="pay-wrap">
+		<div class="bill-content" >
+			<back :text="text"></back>
+			<div class="timer">
+				支付剩余时间：<span>{{timer}}</span>
 			</div>
-			<div class="foot">
-				<div class="foot-center" @click.stop.prevent="pay">
-	  				<div class="pay">
-	  					确认支付
-	  				</div>
-	  			</div>
+			<div class="other">
+				<div class="dish-item">
+					<div class="dish-name">订单名称</div>
+					<div class="dish-other"><span>西可咖啡微信点餐</span></div>
+				</div>
 			</div>
+			<div class="other">
+				<div class="dish-item">
+					<div class="dish-name">支付金额</div>
+					<div class="pay-price">¥{{totalPrice}}</div>
+				</div>
+			</div>
+			<split></split>
+			<div class="sub-title">请选择支付方式</div>
+			<div class="other">
+				<div class="dish-item select-radio" @click="wechatPay">
+					<div class="dish-name"><i class="icon-wechat"></i>微信支付</div>
+					<div class="pay-other"><span class="ico-check" v-show="payTypeShow"></span></div>
+				</div>
+			</div>
+			<div class="other">
+				<div class="dish-item select-radio" @click="memberPay">
+					<div class="dish-name"><i class="icon-member"></i>会员卡支付</div>
+					<div class="pay-other"><span class="ico-check" v-show="!payTypeShow"></span></div>
+				</div>
+			</div>
+			<split></split>
 		</div>
-	</transition>
+		<div class="foot">
+			<div class="foot-center" @click.stop.prevent="pay">
+  				<div class="pay">
+  					确认支付
+  				</div>
+  			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -58,28 +56,35 @@ export default {
 			orderData: JSON.parse(window.localStorage.getItem('bill')),
 			text: '在线支付',
 			payTypeShow: true,
-			payType: 1
+			payType: 1,
+			timer: 30,
+			stop: false,
+			Interval: null
 		}
 	},
 	computed: {
 		totalPrice() {
 			let p = Number(this.orderData.order.realTotal)
 			return p.toFixed(2)
-		},
-		timer() {
-			let i = 100
-
-			setInterval(function() {
-				if (i === 0) {
-					return 1
-				} else {
-					i--
-					return i
-				}
-			}, 1000)
 		}
 	},
 	methods: {
+		update() {
+			if (this.timer <= 0) {
+				this.timer = 30
+			} else {
+				this.timer--
+			}
+		},
+        startTimer() {
+			if (this.stop === false) {
+				console.log('start')
+				this.Interval = setInterval(this.update, 1000)
+			} else {
+				clearInterval(this.Interval)
+			}
+			this.stop = !this.stop
+        },
 		wechatPay() {
 			this.payTypeShow = !this.payTypeShow
 			this.payType = 1
@@ -177,13 +182,6 @@ export default {
 		width: 100%;
 		height: 100%;
 		background-color: #f3f5f7;
-		&.move-enter-active, &.move-leave-active {
-			transition: all .1s linear;
-			transform: translate3D(0,0,0);
-		}
-		&.move-enter, &.move-leave-active {
-			transform: translate3D(100%,0,0);
-		}
 		.bill-content{
 			background-color: #fff;
 			.other{
