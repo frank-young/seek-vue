@@ -126,16 +126,16 @@ export default {
 		z-index: 60;
 		width: 100%;
 		height: 100%;
-		background-color: #fff;
+		background-color: #f3f5f7;
 		.bill-content{
-			padding-bottom: 48px;
+			background-color: #fff;
 			.wating-tab {
 				padding: 10px;
 				background-color: #3290e8;
 			}
 			.tab-panel {
 				padding: 30px 20px;
-				border-radius: 5px;
+				border-radius: 4px;
 				background-color: #fff;
 				display: flex;
 				.panel-icon{
@@ -220,6 +220,7 @@ export default {
 			width: 100%;
 			height: 62px;
 			border-top: 1px solid #cdcdcd;
+			background-color: #fff;
 			.foot-left{
 				flex:0 0 115px;
 				padding: 8px 15px;

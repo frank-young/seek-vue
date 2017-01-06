@@ -6,6 +6,10 @@
 </template>
 
 <script>
+import VueRouter from 'vue-router'
+
+const router = new VueRouter({})
+
 export default {
 	props: {
 		text: {
@@ -14,7 +18,8 @@ export default {
 	},
 	methods: {
 		back() {
-			window.history.go(-1)
+			router.go(-1)
+			console.log('back')
 		}
 	}
 }

@@ -27,7 +27,7 @@
 						加入购物车
 					</div>
 				</div>
-				<split v-show="food.info"></split>
+				<split></split>
 				<div class="info" v-show="food.info">
 					<h1 class="title">商品信息</h1>
 					<p class="text">{{food.info}}</p>

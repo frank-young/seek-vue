@@ -47,6 +47,7 @@
 				</div>
 				<split></split>
 			</div>
+			<alertmsg :text="alertmsg" ref="alertmsg"></alertmsg>
 			<div class="foot">
 				<div class="foot-left">
 					<div class="foot-price">
@@ -55,7 +56,8 @@
 				</div>
 				<div class="foot-right" @click.stop.prevent="pay">
 	  				<div class="pay">
-	  					<router-link class="pay" to="/pay">提交订单</router-link>
+	  					<!-- <router-link class="pay" to="/pay">提交订单</router-link> -->
+	  					提交订单
 	  				</div>
 	  			</div>
 			</div>
@@ -66,6 +68,10 @@
 <script>
 import BScroll from 'better-scroll'
 import split from 'components/split/split'
+import alertmsg from 'components/alertmsg/alertmsg'
+import VueRouter from 'vue-router'
+
+const router = new VueRouter({})
 
 export default {
 	props: {
@@ -76,7 +82,8 @@ export default {
 	data() {
 		return {
 			showFlag: false,
-			dishNumber: 1
+			dishNumber: 1,
+			alertmsg: '提交成功'
 		}
 	},
 	computed: {
@@ -109,13 +116,16 @@ export default {
 				return false
 			}
 			this._saveBillInfo()
+			this.$refs.alertmsg.show()
+			setTimeout(() => {
+				router.push('pay')
+			}, 1000)
 		},
 		_saveBillInfo() {
 			let data = {
 				'domain': this.domain,
 				'order': this._orderData(this.foods, this.totalPrice, this.domain)
 			}
-			console.log(this.foods)
 			window.localStorage.setItem('bill', JSON.stringify(data))
 		},
 		_orderData(foods, price, domain) {
@@ -181,7 +191,8 @@ export default {
 		}
 	},
 	components: {
-		split
+		split,
+		alertmsg
 	}
 }
 </script>

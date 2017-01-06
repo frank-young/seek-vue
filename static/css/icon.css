@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sell-icon';
-  src:  url('../fonts/sell-icon.eot?44g3js');
-  src:  url('../fonts/sell-icon.eot?44g3js#iefix') format('embedded-opentype'),
-    url('../fonts/sell-icon.ttf?44g3js') format('truetype'),
-    url('../fonts/sell-icon.woff?44g3js') format('woff'),
-    url('../fonts/sell-icon.svg?44g3js#sell-icon') format('svg');
+  src:  url('../fonts/sell-icon.eot?z58wlz');
+  src:  url('../fonts/sell-icon.eot?z58wlz#iefix') format('embedded-opentype'),
+    url('../fonts/sell-icon.ttf?z58wlz') format('truetype'),
+    url('../fonts/sell-icon.woff?z58wlz') format('woff'),
+    url('../fonts/sell-icon.svg?z58wlz#sell-icon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-checked:before {
+  content: "\e90d";
+}
 .icon-money:before {
   content: "\e90c";
 }
