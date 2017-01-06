@@ -1,11 +1,12 @@
 require('./check-versions')()
-var request = require('request')
+var YunPianSDK = require('yunpian-nodejs')
 // var Alidayuapp = require('alidayu-node')
 // var alidayuapp = new Alidayuapp('App Key', 'App Secret')
 var config = require('../config')
 if (!process.env.NODE_ENV) process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 var path = require('path')
 var express = require('express')
+var cookieSession = require('cookie-session')
 var webpack = require('webpack')
 var opn = require('opn')
 var proxyMiddleware = require('http-proxy-middleware')
@@ -19,7 +20,16 @@ var port = process.env.PORT || config.dev.port
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
+
 var app = express()
+
+app.set('trust proxy', 1)
+
+app.use(cookieSession({
+    name: 'session',
+    keys:['key1','key2'],
+    maxAge: 24 * 60 * 60 * 1000
+}))
 
 var appData = require('../data.json')
 var seller = appData.seller
@@ -49,43 +59,33 @@ apiRoutes.get('/ratings',function(req,res){
   })
 })
 
-apiRoutes.get('/send/code',function(req,res){
-  let api_key = '4ed82bab99b0b150113955ae56fcb276'
+apiRoutes.get('/code/send',function(req,res){
+  let r = new YunPianSDK()
+  let apikey = '4ed82bab99b0b150113955ae56fcb276'
   let mobile = '18608164404'
-  let text = '【西可咖啡】正在进行支付操作，您的验证码是#code#，如非本人操作，请忽略。'
-  let callback_url = 'http://127.0.0.1:8080/send/code/callback'
-
-  let url = 'https://sms.yunpian.com/v2/sms/single_send.json'
-
-    var formdata = {
-        "apikey": api_key,
-        "mobile": mobile,
-        "text": text,
-        "callback_url": callback_url
-        
-    }
-
-    var options = {
-        url: url,
-        form: JSON.stringify(formdata),
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    }
-    console.log('send')
-    request.post(options, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
-          console.log('success')
-            var data = JSON.parse(body)
-            res.json({
-                msg: '1',
-                data: data
-            })
-        }
-    })
+  let text = '【西可咖啡】您的验证码是'
+  console.log(req.session.code)
+  r.apikey = apikey
+  r.mobile = mobile
+  r.text = text
+  let re = r.sendMsg()
+  re.then(function(value) {
+      req.session.code = value.result.VCODE
+      console.log(req.session.code)
+  }, function(error) {
+      console.log('失败')
+  })
 })
 
-apiRoutes.get('/send/code/callback',function(req,res){
+apiRoutes.get('/code/verify',function(req,res){
+  let code = req.session.code
+  res.json({
+    errno:0,
+    code:code
+  })
+})
+
+apiRoutes.get('/code/callback',function(req,res){
   res.json({
     errno:0,
     data:res
