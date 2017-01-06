@@ -2,11 +2,22 @@
 	<div class="wating-pay" ref="wpScroll">
 		<div class="bill-content" >
 			<back :text="text"></back>
+			<div class="wating-tab">
+				<div class="tab-panel">
+					<div class="panel-icon">
+						<i class="icon-money"></i>
+					</div>
+					<div class="panel-txt">
+						<h3>等待支付</h3>
+						<p>逾期未支付订单将自动取消</p>
+					</div>
+				</div>
+			</div>
 			<div class="title">西可咖啡</div>
 			<div class="dish">
 				<div class="dish-item" v-for="food in orderData.order.dish">
 					<div class="dish-name">{{food.name}}</div>
-					<div class="dish-count"><i>&times;</i>{{food.count}}</div>
+					<div class="dish-count"><i>&times;</i>{{food.number}}</div>
 					<div class="dish-price">¥{{food.price}} </div>
 				</div>
 			</div>
@@ -118,6 +129,38 @@ export default {
 		background-color: #fff;
 		.bill-content{
 			padding-bottom: 48px;
+			.wating-tab {
+				padding: 10px;
+				background-color: #3290e8;
+			}
+			.tab-panel {
+				padding: 30px 20px;
+				border-radius: 5px;
+				background-color: #fff;
+				display: flex;
+				.panel-icon{
+					flex: 0 0 50px;
+					i{
+						font-size: 35px;
+						color: rgb(252, 97, 32);
+					}
+				}
+				.panel-txt {
+					flex: 1;
+					h3{
+						margin-bottom: 15px;
+						font-size: 20px;
+						line-height: 18px;
+						font-weight: 600;
+						color: rgb(252, 97, 32);
+					}
+					p{
+						line-height: 14px;
+						font-size: 14px;
+						color: #555;
+					}
+				}
+			}
 			.title{
 				padding: 15px;
 				font-size: 15px;
