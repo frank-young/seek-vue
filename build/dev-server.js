@@ -1,4 +1,7 @@
 require('./check-versions')()
+var request = require('request')
+// var Alidayuapp = require('alidayu-node')
+// var alidayuapp = new Alidayuapp('App Key', 'App Secret')
 var config = require('../config')
 if (!process.env.NODE_ENV) process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 var path = require('path')
@@ -45,6 +48,50 @@ apiRoutes.get('/ratings',function(req,res){
     data:ratings
   })
 })
+
+apiRoutes.get('/send/code',function(req,res){
+  let api_key = '4ed82bab99b0b150113955ae56fcb276'
+  let mobile = '18608164404'
+  let text = '【西可咖啡】正在进行支付操作，您的验证码是#code#，如非本人操作，请忽略。'
+  let callback_url = 'http://127.0.0.1:8080/send/code/callback'
+
+  let url = 'https://sms.yunpian.com/v2/sms/single_send.json'
+
+    var formdata = {
+        "apikey": api_key,
+        "mobile": mobile,
+        "text": text,
+        "callback_url": callback_url
+        
+    }
+
+    var options = {
+        url: url,
+        form: JSON.stringify(formdata),
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }
+    console.log('send')
+    request.post(options, (error, response, body) => {
+        if (!error && response.statusCode == 200) {
+          console.log('success')
+            var data = JSON.parse(body)
+            res.json({
+                msg: '1',
+                data: data
+            })
+        }
+    })
+})
+
+apiRoutes.get('/send/code/callback',function(req,res){
+  res.json({
+    errno:0,
+    data:res
+  })
+})
+
 
 app.use('/api',apiRoutes)
 

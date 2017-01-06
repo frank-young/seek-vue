@@ -30,6 +30,7 @@
 					<div class="dish-name"><i class="icon-member"></i>会员卡支付</div>
 					<div class="pay-other"><span class="ico-check" v-show="!payTypeShow"></span></div>
 				</div>
+				<sendcode ref="code"></sendcode>
 			</div>
 			<split></split>
 		</div>
@@ -46,6 +47,7 @@
 <script>
 import split from 'components/split/split'
 import back from 'components/back/back'
+import sendcode from 'components/sendcode/sendcode'
 
 const HOST = 'http://127.0.0.1:3000'
 const STATUS = 1
@@ -86,16 +88,23 @@ export default {
 			this.stop = !this.stop
         },
 		wechatPay() {
-			this.payTypeShow = !this.payTypeShow
+			this.payTypeShow = true
 			this.payType = 1
+			this.$refs.code.hide()
 		},
 		memberPay() {
-			this.payTypeShow = !this.payTypeShow
+			this.payTypeShow = false
 			this.payType = 2
+			this.$refs.code.show()
 		},
 		pay() {
-			console.log(this.orderData.order.realTotal)
-			this._pay()
+			if (this.payType === 1) {
+				console.log('微信支付')
+			} else if (this.payType === 2) {
+				console.log('会员卡支付')
+			}
+			// console.log(this.orderData.order.realTotal)
+			// this._pay()
 		},
 		_pay() {
 			let options = {}
@@ -116,7 +125,8 @@ export default {
 	},
 	components: {
 		split,
-		back
+		back,
+		sendcode
 	}
 }
 </script>
