@@ -103,7 +103,8 @@ apiRoutes.post('/code/verify',function(req,res){
   if (codeInput === code && phoneInput === mobile) {
     res.json({
       errno:0,
-      msg: '验证成功'
+      msg: '验证成功',
+      phone: mobile
     })
   } else {
     res.json({

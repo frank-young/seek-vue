@@ -34,6 +34,7 @@
 			</div>
 			<split></split>
 		</div>
+		<alertmsg :text="alertmsg" ref="alertmsg"></alertmsg>
 		<div class="foot">
 			<div class="foot-center" @click.stop.prevent="pay">
   				<div class="pay">
@@ -48,7 +49,10 @@
 import split from 'components/split/split'
 import back from 'components/back/back'
 import sendcode from 'components/sendcode/sendcode'
+import VueRouter from 'vue-router'
+import alertmsg from 'components/alertmsg/alertmsg'
 
+const router = new VueRouter({})
 const HOST = 'http://127.0.0.1:3000'
 const STATUS = 1
 const ERRNO_OK = 0
@@ -62,7 +66,8 @@ export default {
 			payType: 1,
 			timer: 30,
 			stop: false,
-			Interval: null
+			Interval: null,
+			alertmsg: '付款成功'
 		}
 	},
 	computed: {
@@ -102,16 +107,16 @@ export default {
 			if (this.payType === 1) {
 				console.log('微信支付')
 			} else if (this.payType === 2) {
-				console.log('会员卡支付')
 				this.$refs.code.verify((res) => {
 					res = res.body
 					if (res.errno === ERRNO_OK) {
+						// this._pay()
+						this._reduceMoney(res.phone)
 					}
 					console.log(res.msg)
 				})
 			}
 			// console.log(this.orderData.order.realTotal)
-			// this._pay()
 		},
 		_pay() {
 			let options = {}
@@ -123,17 +128,42 @@ export default {
 			this.$http.post(HOST + '/api/order', this.orderData, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
-					// console.log(res.msg)
+				}
+				console.log(res.msg)
+			})
+		},
+		_reduceMoney(phone) {
+			let options = {}
+			let data = {
+				'petcard': {
+					'domain': this.orderData.domain,
+					'total_fee': this.orderData.order.realTotal,
+					'int': 0,
+					'phone': phone
+				}
+			}
+
+			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+			options.emulateJSON = true
+
+			this.$http.post(HOST + '/petcard/reduce/wechat', data, options).then((res) => {
+				res = res.body
+				if (res.status === STATUS) {
+					this.$refs.alertmsg.show()
+					setTimeout(() => {
+						router.push('goods')
+						window.localStorage.removeItem('bill')
+					}, 1000)
 				}
 				console.log(res.msg)
 			})
 		}
-
 	},
 	components: {
 		split,
 		back,
-		sendcode
+		sendcode,
+		alertmsg
 	}
 }
 </script>
