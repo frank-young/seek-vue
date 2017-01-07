@@ -34,7 +34,7 @@ app.use(cookieParser())
 app.use(cookieSession({
     name: 'session',
     keys:['key1','key2'],
-    maxAge: 2 * 60 * 1000
+    maxAge: 20 * 60 * 1000
 }))
 
 var appData = require('../data.json')
