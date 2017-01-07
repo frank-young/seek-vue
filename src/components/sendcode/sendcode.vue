@@ -1,5 +1,6 @@
 <template>
 	<div class="sendcode" v-show="showFlag">
+		<h3>如有会员卡，请直接输入手机号，获取验证码进行支付。<span>（会员卡暂时需要在前台办理，如有疑问请咨询服务员。）</span></h3>
 		<div class="code-wrap">
 			<div class="code-label">
 				手机号
@@ -103,6 +104,16 @@ export default {
 <style lang="less">
 	.sendcode {
 		padding: 10px 15px 10px 15px;
+		h3{
+			font-size: 12px;
+			line-height: 1.6em;
+			color: #666;
+			margin-bottom: 15px;
+			span {
+				font-size: 10px;
+				color: #fc6120;
+			}
+		}
 		.code-wrap{
 			display: flex;
 			margin-bottom: 15px;
