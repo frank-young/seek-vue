@@ -51,6 +51,7 @@ import sendcode from 'components/sendcode/sendcode'
 
 const HOST = 'http://127.0.0.1:3000'
 const STATUS = 1
+const ERRNO_OK = 0
 
 export default {
 	data() {
@@ -102,6 +103,12 @@ export default {
 				console.log('微信支付')
 			} else if (this.payType === 2) {
 				console.log('会员卡支付')
+				this.$refs.code.verify((res) => {
+					res = res.body
+					if (res.errno === ERRNO_OK) {
+					}
+					console.log(res.msg)
+				})
 			}
 			// console.log(this.orderData.order.realTotal)
 			// this._pay()

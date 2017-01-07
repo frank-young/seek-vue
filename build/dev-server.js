@@ -1,5 +1,6 @@
 require('./check-versions')()
 var YunPianSDK = require('yunpian-nodejs')
+var bodyParser = require('body-parser')
 // var Alidayuapp = require('alidayu-node')
 // var alidayuapp = new Alidayuapp('App Key', 'App Secret')
 var config = require('../config')
@@ -7,6 +8,7 @@ if (!process.env.NODE_ENV) process.env.NODE_ENV = JSON.parse(config.dev.env.NODE
 var path = require('path')
 var express = require('express')
 var cookieSession = require('cookie-session')
+var cookieParser = require('cookie-parser')
 var webpack = require('webpack')
 var opn = require('opn')
 var proxyMiddleware = require('http-proxy-middleware')
@@ -23,12 +25,16 @@ var proxyTable = config.dev.proxyTable
 
 var app = express()
 
+app.use(bodyParser.urlencoded({extended: true}))  //这里转换后才能使用  req.body里的内容
+app.use(bodyParser.json())
+
 app.set('trust proxy', 1)
 
+app.use(cookieParser())
 app.use(cookieSession({
     name: 'session',
     keys:['key1','key2'],
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 2 * 60 * 1000
 }))
 
 var appData = require('../data.json')
@@ -59,30 +65,52 @@ apiRoutes.get('/ratings',function(req,res){
   })
 })
 
-apiRoutes.get('/code/send',function(req,res){
+apiRoutes.post('/code/send',function(req,res){
   let r = new YunPianSDK()
   let apikey = '4ed82bab99b0b150113955ae56fcb276'
-  let mobile = '18608164404'
+  let mobile = req.body.phone
   let text = '【西可咖啡】您的验证码是'
-  console.log(req.session.code)
+
   r.apikey = apikey
   r.mobile = mobile
   r.text = text
-  let re = r.sendMsg()
-  re.then(function(value) {
+  if(!req.cookies.isSend){
+    let re = r.sendMsg()
+    re.then(function(value) {
+      res.cookie('isSend', 1, {maxAge: 60 * 1000})
+      req.session.mobile = value.result.mobile
       req.session.code = value.result.VCODE
-      console.log(req.session.code)
-  }, function(error) {
+      res.json({
+        errno: 0,
+        msg:'发送成功'
+      })
+    }, function(error) {
       console.log('失败')
-  })
+    })
+  } else {
+    res.json({
+      errno: 500,
+      msg:'不能在1分钟内重复发送'
+    })
+  }
 })
 
-apiRoutes.get('/code/verify',function(req,res){
+apiRoutes.post('/code/verify',function(req,res){
+  let codeInput = req.body.code
+  let phoneInput = req.body.phone
   let code = req.session.code
-  res.json({
-    errno:0,
-    code:code
-  })
+  let mobile = req.session.mobile
+  if (codeInput === code && phoneInput === mobile) {
+    res.json({
+      errno:0,
+      msg: '验证成功'
+    })
+  } else {
+    res.json({
+      errno:500,
+      msg: '验证码错误'
+    })
+  }
 })
 
 apiRoutes.get('/code/callback',function(req,res){
@@ -91,7 +119,6 @@ apiRoutes.get('/code/callback',function(req,res){
     data:res
   })
 })
-
 
 app.use('/api',apiRoutes)
 

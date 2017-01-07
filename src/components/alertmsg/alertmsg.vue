@@ -22,7 +22,7 @@ export default {
 			this.showFlag = true
 			setTimeout(() => {
 				this.showFlag = false
-			}, 2000)
+			}, 1000)
 		}
 	}
 }
