@@ -151,7 +151,7 @@ export default {
 				if (res.status === STATUS) {
 					this.$refs.alertmsg.show()
 					setTimeout(() => {
-						router.push('goods')
+						router.push('success')
 						window.localStorage.removeItem('bill')
 					}, 1000)
 				}
