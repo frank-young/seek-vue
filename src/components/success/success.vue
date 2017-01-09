@@ -13,6 +13,7 @@
 				<p>我们正尽快为您准备</p>
 			</div>
 		</div>
+		<p class="success-info">如对此订单有疑问，请联系服务员</p>
 		<div class="success-btn-group">
 			<button class="btn" type="button" @click="close">返回首页</button>
 			<button class="btn" type="button" @click="order">查看订单</button>
@@ -21,10 +22,6 @@
 </template>
 
 <script>
-import VueRouter from 'vue-router'
-
-const router = new VueRouter({})
-
 export default {
 	props: {
 	},
@@ -35,10 +32,10 @@ export default {
 	},
 	methods: {
 		close() {
-			router.push('goods')
+			this.$router.push({name: 'goods'})
 		},
 		order() {
-			router.push('goods')
+			this.$router.push({name: 'order'})
 		}
 	},
 	components: {
@@ -77,7 +74,7 @@ export default {
 		
 		.success-content{
 			display: flex;
-			margin-top: 20px;
+			margin-top: 40px;
 		}
 		.success-icon {
 			flex: 2;
@@ -100,6 +97,12 @@ export default {
 				font-size: 14px;
 				color: #888;
 			}
+		}
+		.success-info{
+			margin-top: 15px;
+			font-size: 12px;
+			color: #555;
+			text-align: center;
 		}
 		.success-btn-group{
 			display: flex;

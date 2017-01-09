@@ -56,7 +56,6 @@
 				</div>
 				<div class="foot-right" @click.stop.prevent="pay">
 	  				<div class="pay">
-	  					<!-- <router-link class="pay" to="/pay">提交订单</router-link> -->
 	  					提交订单
 	  				</div>
 	  			</div>
@@ -69,9 +68,6 @@
 import BScroll from 'better-scroll'
 import split from 'components/split/split'
 import alertmsg from 'components/alertmsg/alertmsg'
-import VueRouter from 'vue-router'
-
-const router = new VueRouter({})
 
 export default {
 	props: {
@@ -111,24 +107,40 @@ export default {
 		hidden() {
 			this.showFlag = false
 		},
-		pay() {
+		pay(event) {
 			if (this.totalPrice < this.minPrice) {
 				return false
 			}
-			this._saveBillInfo()
+			if (!event._constructed) {
+				return true
+			}
+
+			let id = (parseInt(Math.random() * new Date() - 0)).toString(32)
+
+			this._saveBillInfo(id)
 			this.$refs.alertmsg.show()
 			setTimeout(() => {
-				router.push('pay')
+				this.$router.push({name: 'pay', params: {id: id}})
 			}, 1000)
 		},
-		_saveBillInfo() {
+		_saveBillInfo(id) {
 			let data = {
 				'domain': this.domain,
-				'order': this._orderData(this.foods, this.totalPrice, this.domain)
+				'order': this._orderData(this.foods, this.totalPrice, this.domain, id)
 			}
-			window.localStorage.setItem('bill', JSON.stringify(data))
+
+			let orders = this._isOrders() ? JSON.parse(window.localStorage.orders) : []
+
+			orders.unshift(data)
+
+			window.localStorage.setItem('orders', JSON.stringify(orders))
 		},
-		_orderData(foods, price, domain) {
+		_isOrders() {
+			if (window.localStorage.getItem('orders')) {
+				return true
+			}
+		},
+		_orderData(foods, price, domain, id) {
 			let obj = {
 				'isTop': false,
 				'isChecked': false,
@@ -154,7 +166,10 @@ export default {
 				'realTotal': price,
 				'isMember': false,
 				'isPetcard': false,
-				'dish': this._foods(foods)
+				'dish': this._foods(foods),
+				'wxpayType': 0,
+				'time': new Date(),
+				'vId': id
 			}
 			obj.dishNum = decodeURI(this._getQueryString()['num'])
 			obj.orderNum = this._createOrderNum(domain)

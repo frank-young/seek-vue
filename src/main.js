@@ -8,17 +8,23 @@ import seller from 'components/seller/seller'
 import pay from 'components/pay/pay'
 import watingpay from 'components/watingpay/watingpay'
 import success from 'components/success/success'
+import orderdetail from 'components/order/orderdetail'
+import ordercancel from 'components/order/ordercancel'
+import order from 'components/order/order'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
 
 const routes = [
-  {path: '/goods', component: goods, name: '商品'},
-  {path: '/ratings', component: ratings, name: '评价'},
-  {path: '/seller', component: seller, name: '商家'},
-  {path: '/pay', component: pay, name: '在线支付'},
-  {path: '/watingpay', component: watingpay, name: '等待支付'},
-  {path: '/success', component: success, name: '下单成功'}
+  {path: '/goods', component: goods, name: 'goods'},
+  {path: '/ratings', component: ratings, name: 'ratings'},
+  {path: '/seller', component: seller, name: 'seller'},
+  {path: '/pay/:id', component: pay, name: 'pay'},
+  {path: '/watingpay/:id', component: watingpay, name: 'watingpay'},
+  {path: '/success', component: success, name: 'success'},
+  {path: '/order/detail/:id', component: orderdetail, name: 'orderdetail'},
+  {path: '/order/cancel/:id', component: ordercancel, name: 'ordercancel'},
+  {path: '/order', component: order, name: 'order'}
 ]
 
 const router = new VueRouter({

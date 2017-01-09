@@ -1,15 +1,15 @@
 <template>
-	<div class="wating-pay" ref="wpScroll">
-		<div class="bill-content" >
+	<div class="order-cancel" ref="odScroll">
+		<div class="order-content" >
 			<back :text="text"></back>
-			<div class="wating-tab">
+			<div class="order-tab">
 				<div class="tab-panel">
 					<div class="panel-icon">
-						<i class="icon-money"></i>
+						<i class="icon-close"></i>
 					</div>
 					<div class="panel-txt">
-						<h3>等待支付</h3>
-						<p>逾期未支付订单将自动取消</p>
+						<h3>订单已取消</h3>
+						<p>如有疑问，请咨询服务员。</p>
 					</div>
 				</div>
 			</div>
@@ -31,32 +31,15 @@
 			<div class="title">订单详情</div>
 			<div class="other">
 				<div class="dish-item">
-					<div class="dish-name">订单号： <span>{{order.orderNum}}</span></div>
+					<div class="dish-name">订单号： <span>seek02_12344389475894379483</span></div>
 				</div>
 			</div>
 			<div class="other">
 				<div class="dish-item">
-					<div class="dish-name">支付方式： <span>在线支付</span></div>
-				</div>
-			</div>
-			<div class="other">
-				<div class="dish-item">
-					<div class="dish-name">下单时间： <span>{{order.time | date}}</span></div>
+					<div class="dish-name">下单时间： <span>2017-1-5 12:30</span></div>
 				</div>
 			</div>
 			<split></split>
-		</div>
-		<div class="wating-foot">
-			<div class="foot-left" @click.stop.prevent="cancel">
-				<div class="foot-price">
-					取消订单
-				</div>
-			</div>
-			<div class="foot-right" @click.stop.prevent="pay">
-  				<div class="pay">
-  					去支付
-  				</div>
-  			</div>
 		</div>
 	</div>
 </template>
@@ -65,16 +48,13 @@
 import BScroll from 'better-scroll'
 import split from 'components/split/split'
 import back from 'components/back/back'
-// import VueRouter from 'vue-router'
-
-// const router = new VueRouter()
 
 export default {
 	data() {
 		return {
 			orders: JSON.parse(window.localStorage.getItem('orders')),
 			order: null,
-			text: '等待支付'
+			text: '订单取消'
 		}
 	},
 	computed: {
@@ -88,37 +68,19 @@ export default {
 	},
 	created() {
 		this.$nextTick(() => {
-			this.scroll = new BScroll(this.$refs.wpScroll, {
+			this.scroll = new BScroll(this.$refs.odScroll, {
 				click: true
 			})
 		})
 		this._setOrder()
 	},
 	methods: {
-		cancel() {
-			this._cancelLocalOrdersData()
-			this.$router.push({path: '/order'})
-		},
-		pay() {
-			this.$router.push({name: 'pay', params: {id: this.$route.params.id}})
-		},
 		_setOrder() {
 			this.orders.forEach((order) => {
 				if (order.order.vId === this.$route.params.id) {
 					this.order = order.order
 				}
 			})
-		},
-		_cancelLocalOrdersData() {
-			this.orders.forEach((order) => {
-				if (order.order.vId === this.$route.params.id) {
-					order.order.wxpayType = 2
-				}
-			})
-			this._saveLocalOrdersData()
-		},
-		_saveLocalOrdersData() {
-			window.localStorage.setItem('orders', JSON.stringify(this.orders))
 		}
 	},
 	components: {
@@ -142,7 +104,7 @@ export default {
 			transform: scale(1,.5);
 		}
 	}
-	.wating-pay {
+	.order-cancel {
 		position: fixed;
 		left: 0;
 		top: 0;
@@ -151,9 +113,9 @@ export default {
 		width: 100%;
 		height: 100%;
 		background-color: #f3f5f7;
-		.bill-content{
+		.order-content{
 			background-color: #fff;
-			.wating-tab {
+			.order-tab {
 				padding: 10px;
 				background-color: #3290e8;
 			}
@@ -163,10 +125,11 @@ export default {
 				background-color: #fff;
 				display: flex;
 				.panel-icon{
-					flex: 0 0 50px;
+					flex: 0 0 80px;
+					text-align: center;
 					i{
 						font-size: 35px;
-						color: rgb(252, 97, 32);
+						color: #afafaf;
 					}
 				}
 				.panel-txt {
@@ -176,7 +139,7 @@ export default {
 						font-size: 20px;
 						line-height: 18px;
 						font-weight: 600;
-						color: rgb(252, 97, 32);
+						color: #666;
 					}
 					p{
 						line-height: 14px;
@@ -229,51 +192,12 @@ export default {
 				width: 100px;
 				text-align: right;
 				font-weight: normal;
-				color: #f60;
+				color: #666;
 				span{
 					color: #333;
 					margin-right: 10px;
 				}
 			}
-		}
-		.wating-foot{
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			display: flex;
-			width: 100%;
-			height: 62px;
-			border-top: 1px solid #cdcdcd;
-			background-color: #fff;
-			.foot-left{
-				flex:0 0 115px;
-				padding: 8px 15px;
-				box-sizing: border-box;
-				.foot-price{
-					height: 44px;
-					line-height: 44px;
-					text-align: center;
-					color: #666;
-					border: 1px solid #cdcdcd;
-					border-radius: 2px;
-					font-size: 16px;
-				}
-			}
-			.foot-right{
-				flex: 1;
-				padding: 8px 15px 8px 0;
-				.pay{
-					height: 46px;
-					line-height: 46px;
-					text-align: center;
-					font-size: 16px;
-					font-weight: 700;
-					border-radius: 2px;
-					background-color: rgb(252, 97, 32);
-					color: #fff;
-				}
-			}
-
 		}
 
 	}

@@ -49,10 +49,8 @@
 import split from 'components/split/split'
 import back from 'components/back/back'
 import sendcode from 'components/sendcode/sendcode'
-import VueRouter from 'vue-router'
 import alertmsg from 'components/alertmsg/alertmsg'
 
-const router = new VueRouter({})
 const HOST = 'http://127.0.0.1:3000'
 const STATUS = 1
 const ERRNO_OK = 0
@@ -60,7 +58,9 @@ const ERRNO_OK = 0
 export default {
 	data() {
 		return {
-			orderData: JSON.parse(window.localStorage.getItem('bill')),
+			orders: JSON.parse(window.localStorage.getItem('orders')),
+			order: null,
+			vId: this.$route.params.id,
 			text: '在线支付',
 			payTypeShow: true,
 			payType: 1,
@@ -72,9 +72,12 @@ export default {
 	},
 	computed: {
 		totalPrice() {
-			let p = Number(this.orderData.order.realTotal)
+			let p = Number(this.order.order.realTotal)
 			return p.toFixed(2)
 		}
+	},
+	created() {
+		this._setOrder()
 	},
 	methods: {
 		update() {
@@ -106,6 +109,7 @@ export default {
 		pay() {
 			if (this.payType === 1) {
 				console.log('微信支付')
+				this._targetToSuccess()
 			} else if (this.payType === 2) {
 				this.$refs.code.verify((res) => {
 					res = res.body
@@ -116,7 +120,7 @@ export default {
 					console.log(res.msg)
 				})
 			}
-			// console.log(this.orderData.order.realTotal)
+			// console.log(this.order.order.realTotal)
 		},
 		_pay() {
 			let options = {}
@@ -125,7 +129,7 @@ export default {
 			options.emulateJSON = true
 
 			console.log(this.domain)
-			this.$http.post(HOST + '/api/order', this.orderData, options).then((res) => {
+			this.$http.post(HOST + '/api/order', this.order, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 				}
@@ -136,8 +140,8 @@ export default {
 			let options = {}
 			let data = {
 				'petcard': {
-					'domain': this.orderData.domain,
-					'total_fee': this.orderData.order.realTotal,
+					'domain': this.order.domain,
+					'total_fee': this.order.order.realTotal,
 					'int': 0,
 					'phone': phone
 				}
@@ -149,14 +153,35 @@ export default {
 			this.$http.post(HOST + '/petcard/reduce/wechat', data, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
-					this.$refs.alertmsg.show()
-					setTimeout(() => {
-						router.push('success')
-						window.localStorage.removeItem('bill')
-					}, 1000)
+					this._targetToSuccess()
 				}
 				console.log(res.msg)
 			})
+		},
+		_setOrder() {
+			this.orders.forEach((order) => {
+				if (order.order.vId === this.$route.params.id) {
+					this.order = order
+				}
+			})
+		},
+		_targetToSuccess() {
+			this._setLocalOrdersData()
+			this.$refs.alertmsg.show()
+			setTimeout(() => {
+				this.$router.push({name: 'success'})
+			}, 1000)
+		},
+		_setLocalOrdersData() {
+			this.orders.forEach((order) => {
+				if (order.order.vId === this.$route.params.id) {
+					order.order.wxpayType = 1
+				}
+			})
+			this._saveLocalOrdersData()
+		},
+		_saveLocalOrdersData() {
+			window.localStorage.setItem('orders', JSON.stringify(this.orders))
 		}
 	},
 	components: {

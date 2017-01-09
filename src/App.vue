@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import header from 'components/header/header'
 
 const ERR_OK = 0
@@ -39,6 +40,22 @@ export default {
         'v-header': header
     }
 }
+
+Vue.filter('currency', (value) => {
+    return Number(value).toFixed(2)
+})
+
+Vue.filter('date', (value) => {
+  let date = new Date(value)
+  let y = date.getFullYear()
+  let m = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)
+  let d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+  let H = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+  let M = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+
+  return y + '-' + m + '-' + d + ' ' + H + ':' + M
+})
+
 </script>
 
 <style lang="less">
