@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import goods from 'components/goods/goods'
 import ratings from 'components/ratings/ratings'
-import seller from 'components/seller/seller'
+import start from 'components/start/start'
 import pay from 'components/pay/pay'
 import watingpay from 'components/watingpay/watingpay'
 import success from 'components/success/success'
@@ -18,7 +18,7 @@ Vue.use(VueResource)
 const routes = [
   {path: '/goods', component: goods, name: 'goods'},
   {path: '/ratings', component: ratings, name: 'ratings'},
-  {path: '/seller', component: seller, name: 'seller'},
+  {path: '/start', component: start, name: 'start'},
   {path: '/pay/:id', component: pay, name: 'pay'},
   {path: '/watingpay/:id', component: watingpay, name: 'watingpay'},
   {path: '/success', component: success, name: 'success'},
@@ -38,4 +38,4 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-router.push('goods')
+router.push('start')

@@ -1,15 +1,17 @@
 <template>
   <div>
-    <v-header v-bind:seller="seller"></v-header>
     <div class="tab">
       <div class="tab-item">
-        <router-link to="/goods">商品</router-link>
+        <router-link to="/start">
+          <img src="./img/start.png" alt="">
+          <span>点餐</span>
+        </router-link>
       </div>
       <div class="tab-item">
-        <router-link to="/ratings">评论</router-link>
-      </div>
-      <div class="tab-item">
-        <router-link to="/seller">商家</router-link>
+        <router-link to="/order">
+          <img src="./img/order.png" alt="">
+          <span>订单</span>
+        </router-link>
       </div>
     </div>
     <router-view :seller="seller"></router-view>
@@ -18,7 +20,6 @@
 
 <script>
 import Vue from 'vue'
-import header from 'components/header/header'
 
 const ERR_OK = 0
 
@@ -37,7 +38,6 @@ export default {
         })
     },
     components: {
-        'v-header': header
     }
 }
 
@@ -62,13 +62,25 @@ Vue.filter('date', (value) => {
   @import './common/less/base.less';
 
   .tab{
-    .pos(r);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
     display: flex;
     width: 100%;
-    height: 40px;
+    height: 58px;
     line-height: 40px;
-    font-size: @f16;
+    font-size: 16px;
     color: @text;
+    background-color: #fefefe;
+    &:before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background-color: #eee;
+      transform: scale(1,0.5);
+    }
     &:after{
       content: '';
       .pos(a);
@@ -84,10 +96,40 @@ Vue.filter('date', (value) => {
       text-align: center;
       a{
         .ds(b);
+        position: relative;
+        height: 58px;
         &.active{
           color: @red;
+        }
+        img {
+          width: 32px;
+          position: absolute;
+          display: block;
+          top: 8px;
+          left: 50%;
+          font-size: 10px;
+          line-height: 10px;
+          -webkit-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
+        }
+        span {
+          position: absolute;
+          display: block;
+          bottom: 8px;
+          left: 50%;
+          font-size: 10px;
+          line-height: 10px;
+          -webkit-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
         }
       }
     }
   }
 </style>
+
+
+
+
+
+
+

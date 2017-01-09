@@ -109,7 +109,7 @@ export default {
 		left: 0;
 		top: 0;
 		bottom: 48px;
-		z-index: 60;
+		z-index: 10;
 		width: 100%;
 		height: 100%;
 		background-color: #f3f5f7;

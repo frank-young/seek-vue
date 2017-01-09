@@ -9,7 +9,7 @@ export default {
   name: 'ratings',
   data () {
     return {
-      msg: '评价!'
+      msg: '评价das!'
     }
   }
 }
