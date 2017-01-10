@@ -77,6 +77,8 @@ export default {
 	},
 	data() {
 		return {
+			num: window.localStorage.getItem('num'),
+			domain: window.localStorage.getItem('domain'),
 			showFlag: false,
 			dishNumber: 1,
 			alertmsg: '提交成功'
@@ -171,7 +173,7 @@ export default {
 				'time': new Date(),
 				'vId': id
 			}
-			obj.dishNum = decodeURI(this._getQueryString()['num'])
+			obj.dishNum = this.num
 			obj.orderNum = this._createOrderNum(domain)
 			return obj
 		},
@@ -190,19 +192,7 @@ export default {
 			}
 		},
 		_createOrderNum(domain) {
-			return domain + Math.round((Math.random() * (new Date() - 0)) * 10000) + ''
-		},
-		_getQueryString(name) {
-			let arr = []
-			let	hash = []
-			let hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&')
-
-			for (let i = 0; i < hashes.length; i++) {
-				hash = hashes[i].split('=')
-				arr.push(hash[0])
-				arr[hash[0]] = hash[1]
-			}
-			return arr
+			return domain + '_' + Math.round((Math.random() * (new Date() - 0)) * 10000) + ''
 		}
 	},
 	components: {

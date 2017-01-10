@@ -1,6 +1,9 @@
 require('./check-versions')()
 var YunPianSDK = require('yunpian-nodejs')
 var bodyParser = require('body-parser')
+var connect = require('connect')
+var mongoose = require('mongoose')
+var request = require('request')
 // var Alidayuapp = require('alidayu-node')
 // var alidayuapp = new Alidayuapp('App Key', 'App Secret')
 var config = require('../config')
@@ -21,9 +24,15 @@ var port = process.env.PORT || config.dev.port
 // Define HTTP proxies to your custom API backend
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
+var dbUrl = 'mongodb://127.0.0.1/seekdb'
+var Table = require('./models/table/table')
 
+mongoose.connect(dbUrl)
 
 var app = express()
+
+app.set('views','./build/views/pages')  //设置视图根目录
+app.set('view engine','jade') //设置默认的模板引擎
 
 app.use(bodyParser.urlencoded({extended: true}))  //这里转换后才能使用  req.body里的内容
 app.use(bodyParser.json())
@@ -114,6 +123,53 @@ apiRoutes.post('/code/verify',function(req,res){
   }
 })
 
+apiRoutes.get('/table/:id',function(req,res){
+  var id = req.params.id
+  var appid = 'wx782db8ee3e80c4aa'
+  var appSecret = '07edc09a46dba2e8d0b1964b5aec3a46'
+  //https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx782db8ee3e80c4aa&redirect_uri=http%3A%2F%2Ffrank.d1.natapp.cc%2Fmobile%2Fordering%2F58512475bfefa61c583e3132&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect
+
+  var code = req.query.code
+  // 用获取code换取token
+  var url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + appid + '&secret=' + appSecret + '&code=' + code + '&grant_type=authorization_code'
+  var saveToken = function() {
+      request(url, function(error, response, body) {
+          if (!error && response.statusCode == 200) {
+              var data = JSON.parse(body)
+              var token = data.access_token
+              var refresh_token = data.refresh_token
+              var openid = data.openid
+
+              req.session.openid = openid
+              console.log(req.session.openid)
+              Table.findById(id, function(err, table) {
+                  if (table) {
+                      res.render('wxorder', {
+                          status: 1,
+                          num: table.num,
+                          domain: table.domainlocal,
+                          openid: openid
+                      })
+                  } else {
+                      res.json({
+                          status: 0,
+                          msg: '扫描失败，请重新扫描二维码！'
+                      })
+                  }
+              })
+
+          } else {
+              res.json({
+                  status: 0,
+                  msg: '已经授权过了'
+              })
+
+          }
+      })
+  }
+  saveToken()
+})
+
 apiRoutes.get('/code/callback',function(req,res){
   res.json({
     errno:0,
@@ -163,7 +219,8 @@ app.use(hotMiddleware)
 
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
-app.use(staticPath, express.static('./static'))
+// app.use(staticPath, express.static('./static'))
+app.use(express.static(path.join(__dirname,'../static')))
 
 module.exports = app.listen(port, function (err) {
   if (err) {

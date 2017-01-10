@@ -66,10 +66,10 @@ export default {
 	},
 	data() {
 		return {
+			domain: window.localStorage.getItem('domain'),
 			goods: [],
 			listHeight: [],
 			scrollY: 0,
-			domain: decodeURI(this._getQueryString('domain')),
 			selectedFood: {}
 		}
 	},
@@ -147,15 +147,6 @@ export default {
 			}
 			this.selectedFood = food
 			this.$refs.food.show()
-		},
-		_getQueryString(name) {
-			let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
-			let r = window.location.search.substr(1).match(reg)
-			if (r != null) {
-				return unescape(r[2])
-            } else {
-				return null
-			}
 		}
 	},
 	components: {

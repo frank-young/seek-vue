@@ -51,7 +51,8 @@ import back from 'components/back/back'
 import sendcode from 'components/sendcode/sendcode'
 import alertmsg from 'components/alertmsg/alertmsg'
 
-const HOST = 'http://127.0.0.1:3000'
+const wx = require('weixin-js-sdk')
+const HOST = 'http://192.168.31.217:3000'
 const STATUS = 1
 const ERRNO_OK = 0
 
@@ -67,7 +68,9 @@ export default {
 			timer: 30,
 			stop: false,
 			Interval: null,
-			alertmsg: '付款成功'
+			alertmsg: '付款成功',
+			wxpayData: {},
+			openid: window.localStorage.getItem('openid')
 		}
 	},
 	computed: {
@@ -109,7 +112,8 @@ export default {
 		pay() {
 			if (this.payType === 1) {
 				console.log('微信支付')
-				this._targetToSuccess()
+				// this._targetToSuccess()
+				this._getWxpayData()
 			} else if (this.payType === 2) {
 				this.$refs.code.verify((res) => {
 					res = res.body
@@ -182,6 +186,62 @@ export default {
 		},
 		_saveLocalOrdersData() {
 			window.localStorage.setItem('orders', JSON.stringify(this.orders))
+		},
+		_getWxpayData() {
+			this.$http.get(HOST + '/api/wxpay?openid=' + this.openid).then((res) => {
+				res = res.body
+				if (res.status === STATUS) {
+					this.wxpayData = res.data
+					console.log('获取数据...')
+					this._wxpayConfig()
+					this._setWxpayInfo(res.data)
+				}
+			})
+		},
+		_wxpayConfig() {
+			this.$http.get(HOST + '/api/signa').then((res) => {
+				console.log(res.body)
+				let data = res.body
+				if (res.status === STATUS) {
+					wx.config({
+						debug: true,
+						appId: data.appId,
+						timestamp: data.timestamp,
+						nonceStr: data.nonceStr,
+						signature: data.signature,
+						jsApiList: ['chooseWXPay']
+					})
+				}
+			})
+		},
+		_setWxpayInfo(data) {
+			console.log(data.appId)
+			console.log(data.timeStamp)
+			console.log(data.nonceStr)
+			console.log(data.package)
+			console.log(data.signType)
+			console.log(data.paySign)
+			wx.chooseWXPay({
+				appId: data.appId,
+				timestamp: data.timeStamp,
+				nonceStr: data.nonceStr,
+				package: data.package,
+				signType: data.signType,
+				paySign: data.paySign,
+				success(res) {
+					this.alertmsg = res
+					this.$refs.alertmsg.show()
+					console.log('success')
+				},
+				cancel() {
+					console.log('取消')
+				},
+				error(res) {
+					this.alertmsg = res
+					this.$refs.alertmsg.show()
+					console.log('fail')
+				}
+			})
 		}
 	},
 	components: {

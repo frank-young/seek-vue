@@ -15,6 +15,8 @@ export default {
 		return {
 		}
 	},
+	created() {
+	},
 	methods: {
 		start() {
 			this.$router.push('goods')
