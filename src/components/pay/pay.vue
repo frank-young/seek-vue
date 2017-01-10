@@ -194,15 +194,22 @@ export default {
 					this.wxpayData = res.data
 					console.log('获取数据...')
 					this._wxpayConfig()
-					this._setWxpayInfo(res.data)
+					wx.ready(() => {
+						console.log('验证成功')
+						this._setWxpayInfo(res.data)
+						// this._swtWxpayOther(res.data)
+					})
+					// wx.error((res) => {
+					// 	console.log('验证失败')
+					// })
 				}
 			})
 		},
 		_wxpayConfig() {
 			this.$http.get(HOST + '/api/signa').then((res) => {
 				console.log(res.body)
-				let data = res.body
-				if (res.status === STATUS) {
+				let data = res.body.data
+				if (res.body.status === STATUS) {
 					wx.config({
 						debug: true,
 						appId: data.appId,
@@ -242,7 +249,33 @@ export default {
 					console.log('fail')
 				}
 			})
+		},
+		_swtWxpayOther(data) {
+			if (typeof WeixinJSBridge === 'undefined') {
+				if (document.addEventListener) {
+					document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
+				} else if (document.attachEvent) {
+					document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
+					document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
+				}
+			} else {
+				onBridgeReady()
+			}
+			function onBridgeReady() {
+				wx.WeixinJSBridge.invoke(
+					'getBrandWCPayRequest', {
+						appId: data.appId,
+						timestamp: data.timeStamp,
+						nonceStr: data.nonceStr,
+						package: data.package,
+						signType: data.signType,
+						paySign: data.paySign
+					}, function(res) {
+					if (res.err_msg === 'get_brand_wcpay_request:ok') {}
+				})
+			}
 		}
+
 	},
 	components: {
 		split,
