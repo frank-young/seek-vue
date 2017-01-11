@@ -141,7 +141,6 @@ apiRoutes.get('/table/:id',function(req,res){
               var openid = data.openid
 
               req.session.openid = openid
-              console.log(req.session.openid)
               Table.findById(id, function(err, table) {
                   if (table) {
                       res.render('wxorder', {

@@ -50,7 +50,9 @@ import split from 'components/split/split'
 import back from 'components/back/back'
 import sendcode from 'components/sendcode/sendcode'
 import alertmsg from 'components/alertmsg/alertmsg'
+import VueRouter from 'vue-router'
 
+const router = new VueRouter()
 const wx = require('weixin-js-sdk')
 const HOST = 'http://192.168.31.217:3000'
 const STATUS = 1
@@ -186,7 +188,6 @@ export default {
 				res = res.body
 				if (res.status === STATUS) {
 					this.wxpayData = res.data
-					console.log('获取数据...')
 					this._wxpayConfig()
 					wx.ready(() => {
 						this._setWxpayInfo(res.data)
@@ -220,8 +221,9 @@ export default {
 				paySign: data.paySign,
 				success(res) {
 					if (res.errMsg === 'chooseWXPay:ok') {
-						window.alert('支付成功')
 						// this.$options.methods._targetToSuccess.bind(this)()
+						window.alert('支付成功')
+						router.push('success')
 					} else {
 						window.alert('失败！！！')
 					}
