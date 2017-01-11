@@ -124,7 +124,6 @@ export default {
 					console.log(res.msg)
 				})
 			}
-			// console.log(this.order.order.realTotal)
 		},
 		_pay() {
 			let options = {}
@@ -132,12 +131,10 @@ export default {
 			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 			options.emulateJSON = true
 
-			console.log(this.domain)
 			this.$http.post(HOST + '/api/order', this.order, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 				}
-				console.log(res.msg)
 			})
 		},
 		_reduceMoney(phone) {
@@ -159,7 +156,6 @@ export default {
 				if (res.status === STATUS) {
 					this._targetToSuccess()
 				}
-				console.log(res.msg)
 			})
 		},
 		_setOrder() {
@@ -172,9 +168,7 @@ export default {
 		_targetToSuccess() {
 			this._setLocalOrdersData()
 			this.$refs.alertmsg.show()
-			setTimeout(() => {
-				this.$router.push({name: 'success'})
-			}, 1000)
+			this.$router.push({name: 'success'})
 		},
 		_setLocalOrdersData() {
 			this.orders.forEach((order) => {
@@ -195,13 +189,8 @@ export default {
 					console.log('获取数据...')
 					this._wxpayConfig()
 					wx.ready(() => {
-						console.log('验证成功')
 						this._setWxpayInfo(res.data)
-						// this._swtWxpayOther(res.data)
 					})
-					// wx.error((res) => {
-					// 	console.log('验证失败')
-					// })
 				}
 			})
 		},
@@ -211,7 +200,7 @@ export default {
 				let data = res.body.data
 				if (res.body.status === STATUS) {
 					wx.config({
-						debug: true,
+						// debug: true,
 						appId: data.appId,
 						timestamp: data.timestamp,
 						nonceStr: data.nonceStr,
@@ -222,12 +211,6 @@ export default {
 			})
 		},
 		_setWxpayInfo(data) {
-			console.log(data.appId)
-			console.log(data.timeStamp)
-			console.log(data.nonceStr)
-			console.log(data.package)
-			console.log(data.signType)
-			console.log(data.paySign)
 			wx.chooseWXPay({
 				appId: data.appId,
 				timestamp: data.timeStamp,
@@ -236,46 +219,21 @@ export default {
 				signType: data.signType,
 				paySign: data.paySign,
 				success(res) {
-					this.alertmsg = res
-					this.$refs.alertmsg.show()
-					console.log('success')
+					if (res.errMsg === 'chooseWXPay:ok') {
+						window.alert('支付成功')
+						// this.$options.methods._targetToSuccess.bind(this)()
+					} else {
+						window.alert('失败！！！')
+					}
 				},
 				cancel() {
-					console.log('取消')
+					window.alert('取消！！！')
 				},
 				error(res) {
-					this.alertmsg = res
-					this.$refs.alertmsg.show()
-					console.log('fail')
+					window.alert('失败！！！')
 				}
 			})
-		},
-		_swtWxpayOther(data) {
-			if (typeof WeixinJSBridge === 'undefined') {
-				if (document.addEventListener) {
-					document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
-				} else if (document.attachEvent) {
-					document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
-					document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
-				}
-			} else {
-				onBridgeReady()
-			}
-			function onBridgeReady() {
-				wx.WeixinJSBridge.invoke(
-					'getBrandWCPayRequest', {
-						appId: data.appId,
-						timestamp: data.timeStamp,
-						nonceStr: data.nonceStr,
-						package: data.package,
-						signType: data.signType,
-						paySign: data.paySign
-					}, function(res) {
-					if (res.err_msg === 'get_brand_wcpay_request:ok') {}
-				})
-			}
 		}
-
 	},
 	components: {
 		split,
