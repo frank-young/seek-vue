@@ -62,9 +62,9 @@ import split from 'components/split/split'
 import back from 'components/back/back'
 import sendcode from 'components/sendcode/sendcode'
 import alertmsg from 'components/alertmsg/alertmsg'
-// import VueRouter from 'vue-router'
+import VueRouter from 'vue-router'
 
-// const router = new VueRouter()
+const router = new VueRouter()
 const wx = require('weixin-js-sdk')
 const HOST = 'http://192.168.31.217:3000'
 const HOST_LOCAL = 'http://frank.d1.natapp.cc'
@@ -221,7 +221,7 @@ export default {
 				let data = res.body.data
 				if (res.body.status === STATUS) {
 					wx.config({
-						debug: true,
+						// debug: true,
 						appId: data.appId,
 						timestamp: data.timestamp,
 						nonceStr: data.nonceStr,
@@ -241,18 +241,31 @@ export default {
 				paySign: data.paySign,
 				success(res) {
 					if (res.errMsg === 'chooseWXPay:ok') {
-						window.alert(res)
-						// this.$options.methods._setLocalOrdersData.bind(this)()
-						// router.push('success')
+						let ordersCopy = JSON.parse(window.localStorage.getItem('orders'))
+						let vIdCopy = window.localStorage.getItem('vId')
+						ordersCopy.forEach((order) => {
+							if (order.order.vId === vIdCopy) {
+								order.order.wxpayType = 1
+							}
+						})
+						window.localStorage.setItem('orders', JSON.stringify(ordersCopy))
+						router.push('success')
+						window.location.reload()
 					} else {
-						window.alert('失败！！！')
+						window.alert('支付失败')
+						window.location.reload()
+						router.push('order')
 					}
 				},
 				cancel() {
-					window.alert('取消！！！')
+					window.alert('支付取消')
+					router.push('order')
+					window.location.reload()
 				},
 				error(res) {
-					window.alert('失败！！！')
+					window.alert('支付失败')
+					router.push('order')
+					window.location.reload()
 				}
 			})
 		}

@@ -5,6 +5,7 @@ var connect = require('connect')
 var mongoose = require('mongoose')
 var request = require('request')
 var WXPay = require('weixin-pay')
+var xmlparser = require('express-xml-bodyparser')
 // var Alidayuapp = require('alidayu-node')
 // var alidayuapp = new Alidayuapp('App Key', 'App Secret')
 var config = require('../config')
@@ -197,9 +198,20 @@ apiRoutes.get('/wxpay',function(req,res){
 
 })
 
-apiRoutes.get('/notify',function(req,res){
+apiRoutes.post('/notify',xmlparser({trim: false, explicitArray: false}),function(req,res){
   console.log('请求了回掉')
-  res.send('<xml><return_code><![CDATA[SUCCESS]]></return_code> <return_msg><![CDATA[OK]]>')
+  console.log(req.body.xml)
+  var msg = req.body.xml.return_code
+  if (msg.result_code === 'SUCCESS') {
+    
+  }
+  var res_data = '<xml>'+
+                    '<return_code><![CDATA[SUCCESS]]></return_code>'+
+                    '<return_msg><![CDATA[OK]]></return_msg>'+
+                  '</xml>'
+
+  res.writeHead(200, { 'Content-Type': 'application/xml' })
+  res.end(res_data)
 })
 
 app.use('/api',apiRoutes)
