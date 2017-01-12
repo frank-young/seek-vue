@@ -63,6 +63,7 @@ import back from 'components/back/back'
 import sendcode from 'components/sendcode/sendcode'
 import alertmsg from 'components/alertmsg/alertmsg'
 import VueRouter from 'vue-router'
+import Vue from 'vue'
 
 const router = new VueRouter()
 const wx = require('weixin-js-sdk')
@@ -142,9 +143,9 @@ export default {
 					res = res.body
 					if (res.errno === ERRNO_OK) {
 						// this._pay()
+						this._saveOrder(this.order)
 						this._reduceMoney(res.phone)
 					}
-					console.log(res.msg)
 				})
 			}
 		},
@@ -157,6 +158,24 @@ export default {
 			this.$http.post(HOST + '/api/order', this.order, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
+				}
+			})
+		},
+		_saveOrder(order) {
+			let options = {}
+			let data = {
+				'order': order
+			}
+
+			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+			options.emulateJSON = true
+
+			this.$http.post(HOST + '/api/order', data, options).then((res) => {
+				res = res.body
+				if (res.status === STATUS) {
+					console.log('success')
+				} else {
+					console.log(res)
 				}
 			})
 		},
@@ -197,6 +216,7 @@ export default {
 			this.orders.forEach((order) => {
 				if (order.order.vId === this.vId) {
 					order.order.wxpayType = 1
+					order.order.payTime = new Date()
 				}
 			})
 			this._saveLocalOrdersData()
@@ -246,6 +266,23 @@ export default {
 						ordersCopy.forEach((order) => {
 							if (order.order.vId === vIdCopy) {
 								order.order.wxpayType = 1
+								order.order.payTime = new Date()
+								let options = {}
+								let data = {
+									'order': order
+								}
+
+								options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+								options.emulateJSON = true
+
+								Vue.http.post(HOST + '/api/order', data, options).then((res) => {
+									res = res.body
+									if (res.status === STATUS) {
+										console.log('success')
+									} else {
+										console.log(res)
+									}
+								})
 							}
 						})
 						window.localStorage.setItem('orders', JSON.stringify(ordersCopy))
@@ -258,7 +295,7 @@ export default {
 					}
 				},
 				cancel() {
-					window.alert('支付取消')
+					// window.alert('支付取消')
 					router.push('order')
 					window.location.reload()
 				},

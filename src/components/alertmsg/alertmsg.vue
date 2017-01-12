@@ -1,6 +1,6 @@
 <template>
 	<div class="aletmsg" v-show="showFlag">
-		<i class="icon-checked"></i>
+		<i :class="icon"></i>
 		<p>{{text}}</p>
 	</div>
 </template>
@@ -10,6 +10,10 @@ export default {
 	props: {
 		text: {
 			type: String
+		},
+		icon: {
+			type: String,
+			default: 'icon-checked'
 		}
 	},
 	data() {
@@ -42,7 +46,7 @@ export default {
 		text-align: center;
 		background-color: rgba(0, 0, 0, 0.5);
 		i{
-			margin-left: 10px;
+			margin-left: 0px;
 			font-size: 35px;
 			color: #fff;
 		}

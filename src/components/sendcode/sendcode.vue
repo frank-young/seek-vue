@@ -18,15 +18,16 @@
 				<input type="text" placeholder="验证码" v-model="code">
 			</div>
 			<div class="code-btn">
-				<button type="button" class="btn" :disabled="btnDisabled" @click="sendCode">{{btnText}}</button>
-				<!-- <button class="btn">（60s）重新发送</button> -->
+				<a class="btn" :disabled="btnDisabled" @click.stop.prevent="sendCode($event)">{{btnText}}</a>
 			</div>
 		</div>
-		
+		<alertmsg :text="alertmsg" :icon="alerticon" ref="alertmsg"></alertmsg>
 	</div>
 </template>
 
 <script>
+import alertmsg from 'components/alertmsg/alertmsg'
+
 const ERRNO_OK = 0
 
 export default {
@@ -42,7 +43,9 @@ export default {
 			code: null,
 			timer: 60,
 			btnText: '发送验证码',
-			btnDisabled: false
+			btnDisabled: false,
+			alertmsg: '',
+			alerticon: ''
 		}
 	},
 	methods: {
@@ -52,12 +55,25 @@ export default {
 		hide() {
 			this.showFlag = false
 		},
-		sendCode() {
-			this._sendCode(this.phone)
-			this._resend()
+		sendCode(event) {
+			if (!event._constructed) {
+				return true
+			}
+			let rePhone = /^1[3|5|7|8]\d{9}$/
+			if (rePhone.test(this.phone)) {
+				this._sendCode(this.phone)
+				this._resend()
+			} else {
+				this._alert('icon-close', '手机号错误')
+			}
 		},
 		verify(callback) {
 			this._verify(this.code, this.phone, callback)
+		},
+		_alert(icon = 'icon-checked', msg = '操作成功') {
+			this.alerticon = icon
+			this.alertmsg = msg
+			this.$refs.alertmsg.show()
 		},
 		_sendCode(phone) {
 			let options = {}
@@ -97,6 +113,9 @@ export default {
 				}
 			}, 1000)
 		}
+	},
+	components: {
+		alertmsg
 	}
 }
 </script>
@@ -143,10 +162,10 @@ export default {
 			// flex: 0 0 125px;
 			// width: 125px;
 			margin-left: 15px;
-			button {
+			.btn {
 				height: 28px;
 				padding: 0 10px;
-				line-height: 12px;
+				line-height: 28px;
 				display: inline-block;
 				background-color: rgb(252, 97, 32);
 				border: 0;
@@ -154,7 +173,7 @@ export default {
 				color: #fff;
 				outline: none;
 			}
-			button[disabled]{
+			.btn[disabled]{
 				background-color: #acacac;
 			}
 		}

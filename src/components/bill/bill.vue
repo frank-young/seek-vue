@@ -116,7 +116,6 @@ export default {
 			if (!event._constructed) {
 				return true
 			}
-
 			let id = (parseInt(Math.random() * new Date() - 0)).toString(32)
 
 			this._saveBillInfo(id)

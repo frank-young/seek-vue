@@ -32,7 +32,7 @@
 				<div class="title">订单详情</div>
 				<div class="other">
 					<div class="dish-item">
-						<div class="dish-name">订单号： <span>seek02_12344389475894379483</span></div>
+						<div class="dish-name">订单号： <span>{{order.orderNum}}</span></div>
 					</div>
 				</div>
 				<div class="other">
@@ -42,7 +42,12 @@
 				</div>
 				<div class="other">
 					<div class="dish-item">
-						<div class="dish-name">下单时间： <span>2017-1-5 12:30</span></div>
+						<div class="dish-name">下单时间： <span>{{order.time | date}}</span></div>
+					</div>
+				</div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">支付完成时间： <span>{{order.payTime | date}}</span></div>
 					</div>
 				</div>
 				<split></split>
@@ -119,7 +124,6 @@ export default {
 		bottom: 58px;
 		z-index: 10;
 		width: 100%;
-		height: 100%;
 		background-color: #f3f5f7;
 		.order-content{
 			background-color: #fff;
