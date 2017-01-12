@@ -1,38 +1,49 @@
 <template>
-	<div class="pay-wrap">
-		<div class="bill-content" >
-			<back :text="text"></back>
-			<div class="timer">
-				支付剩余时间：<span>{{timer}}</span>
-			</div>
-			<div class="other">
-				<div class="dish-item">
-					<div class="dish-name">订单名称</div>
-					<div class="dish-other"><span>西可咖啡微信点餐</span></div>
+	<div class="pay-container">
+		<div class="success-close">
+			<i class="icon-close" @click="close"></i>
+			<span class="close-txt">{{text}}</span>
+		</div>
+		<div class="pay-wrap" ref="payScroll">
+			<div class="bill-content" >
+				<div class="timer">
+					支付剩余时间：<span>{{timer}}</span>
 				</div>
-			</div>
-			<div class="other">
-				<div class="dish-item">
-					<div class="dish-name">支付金额</div>
-					<div class="pay-price">¥{{totalPrice}}</div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">订单名称</div>
+						<div class="dish-other"><span>西可咖啡微信点餐</span></div>
+					</div>
 				</div>
-			</div>
-			<split></split>
-			<div class="sub-title">请选择支付方式</div>
-			<div class="other">
-				<div class="dish-item select-radio" @click="wechatPay">
-					<div class="dish-name"><i class="icon-wechat"></i>微信支付</div>
-					<div class="pay-other"><span class="ico-check" v-show="payTypeShow"></span></div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">订单编号</div>
+						<div class="dish-other"><span>{{order.order.orderNum}}</span></div>
+					</div>
 				</div>
-			</div>
-			<div class="other">
-				<div class="dish-item select-radio" @click="memberPay">
-					<div class="dish-name"><i class="icon-member"></i>会员卡支付</div>
-					<div class="pay-other"><span class="ico-check" v-show="!payTypeShow"></span></div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">支付金额</div>
+						<div class="pay-price">¥{{totalPrice}}</div>
+					</div>
 				</div>
-				<sendcode ref="code"></sendcode>
+				<split></split>
+				<div class="sub-title">请选择支付方式</div>
+				<div class="other">
+					<div class="dish-item select-radio" @click="wechatPay">
+						<div class="dish-name"><i class="icon-wechat"></i>微信支付</div>
+						<div class="pay-price"><span class="ico-check" v-show="payTypeShow"></span></div>
+					</div>
+				</div>
+				<div class="other">
+					<div class="dish-item select-radio" @click="memberPay">
+						<div class="dish-name"><i class="icon-member"></i>会员卡支付</div>
+						<div class="pay-price"><span class="ico-check" v-show="!payTypeShow"></span></div>
+					</div>
+					<sendcode ref="code"></sendcode>
+				</div>
+				<split></split>
 			</div>
-			<split></split>
 		</div>
 		<alertmsg :text="alertmsg" ref="alertmsg"></alertmsg>
 		<div class="foot">
@@ -46,15 +57,17 @@
 </template>
 
 <script>
+import BScroll from 'better-scroll'
 import split from 'components/split/split'
 import back from 'components/back/back'
 import sendcode from 'components/sendcode/sendcode'
 import alertmsg from 'components/alertmsg/alertmsg'
-import VueRouter from 'vue-router'
+// import VueRouter from 'vue-router'
 
-const router = new VueRouter()
+// const router = new VueRouter()
 const wx = require('weixin-js-sdk')
 const HOST = 'http://192.168.31.217:3000'
+const HOST_LOCAL = 'http://frank.d1.natapp.cc'
 const STATUS = 1
 const ERRNO_OK = 0
 
@@ -63,7 +76,7 @@ export default {
 		return {
 			orders: JSON.parse(window.localStorage.getItem('orders')),
 			order: null,
-			vId: this.$route.params.id,
+			vId: window.localStorage.getItem('vId'),
 			text: '在线支付',
 			payTypeShow: true,
 			payType: 1,
@@ -83,8 +96,16 @@ export default {
 	},
 	created() {
 		this._setOrder()
+		this.$nextTick(() => {
+			this.scroll = new BScroll(this.$refs.payScroll, {
+				click: true
+			})
+		})
 	},
 	methods: {
+		close() {
+			this.$router.push({name: 'order'})
+		},
 		update() {
 			if (this.timer <= 0) {
 				this.timer = 30
@@ -162,7 +183,7 @@ export default {
 		},
 		_setOrder() {
 			this.orders.forEach((order) => {
-				if (order.order.vId === this.$route.params.id) {
+				if (order.order.vId === this.vId) {
 					this.order = order
 				}
 			})
@@ -174,7 +195,7 @@ export default {
 		},
 		_setLocalOrdersData() {
 			this.orders.forEach((order) => {
-				if (order.order.vId === this.$route.params.id) {
+				if (order.order.vId === this.vId) {
 					order.order.wxpayType = 1
 				}
 			})
@@ -184,7 +205,7 @@ export default {
 			window.localStorage.setItem('orders', JSON.stringify(this.orders))
 		},
 		_getWxpayData() {
-			this.$http.get(HOST + '/api/wxpay?openid=' + this.openid).then((res) => {
+			this.$http.get(HOST_LOCAL + '/api/wxpay?openid=' + this.openid).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 					this.wxpayData = res.data
@@ -197,11 +218,10 @@ export default {
 		},
 		_wxpayConfig() {
 			this.$http.get(HOST + '/api/signa').then((res) => {
-				console.log(res.body)
 				let data = res.body.data
 				if (res.body.status === STATUS) {
 					wx.config({
-						// debug: true,
+						debug: true,
 						appId: data.appId,
 						timestamp: data.timestamp,
 						nonceStr: data.nonceStr,
@@ -221,9 +241,9 @@ export default {
 				paySign: data.paySign,
 				success(res) {
 					if (res.errMsg === 'chooseWXPay:ok') {
-						// this.$options.methods._targetToSuccess.bind(this)()
-						window.alert('支付成功')
-						router.push('success')
+						window.alert(res)
+						// this.$options.methods._setLocalOrdersData.bind(this)()
+						// router.push('success')
 					} else {
 						window.alert('失败！！！')
 					}
@@ -247,6 +267,15 @@ export default {
 </script>
 
 <style lang="less">
+	.pay-container{
+	    position: fixed;
+	    left: 0;
+	    top: 0;
+	    z-index: 16;
+    	width: 100%;
+		height: 100%;
+		background-color: #f3f5f7;
+	}
 	.b-1px(@x:rgba(0,0,0,.1)){
 		position: relative;
 		&:after{
@@ -279,7 +308,7 @@ export default {
 		.b-1px();
 	}
 	.ico-check{
-		display: block;
+		display: inline-block;
 		width: 23px;
 		height: 23px;
 		border-radius: 50%;
@@ -298,14 +327,36 @@ export default {
 
 		}
 	}
-	.pay-wrap {
+	.success-close{
 		position: fixed;
 		left: 0;
 		top: 0;
-		bottom: 48px;
-		z-index: 60;
+		z-index: 20;
 		width: 100%;
-		height: 100%;
+		height: 48px;
+		line-height: 48px;
+		background-color: #3290e8;
+		i{
+			display: inline-block;
+			font-size: 24px;
+			padding: 12px 10px 12px 20px;
+			margin-right: 10px;
+			color: #fff;
+		}
+		.close-txt {
+			display: inline-block;
+			vertical-align: top;
+			font-size: 16px;
+			color: #fff
+		}	
+	}
+	.pay-wrap {
+		position: fixed;
+		left: 0;
+		top: 48px;
+		bottom: 220px;
+		z-index: 16;
+		width: 100%;
 		background-color: #f3f5f7;
 		.bill-content{
 			background-color: #fff;
@@ -319,7 +370,7 @@ export default {
 				position: relative;
 			}
 			.dish-name{
-				flex: 1;
+				flex: 0 0 140px;
 				color: #222;
 				i{
 					font-size: 30px;
@@ -335,10 +386,9 @@ export default {
 			}
 			.dish-other,
 			.pay-price{
-				flex: 0 0 100px;
+				flex: 1;
 				width: 100px;
 				text-align: right;
-
 				span{
 					font-weight: normal;
 					color: #666;
@@ -352,10 +402,13 @@ export default {
 				font-weight: normal;
 			}
 		}
-		.foot{
+
+	}
+	.foot{
 			position: fixed;
 			bottom: 0;
 			left: 0;
+			z-index: 20;
 			width: 100%;
 			height: 48px;
 			.foot-center{
@@ -372,8 +425,6 @@ export default {
 			}
 
 		}
-
-	}
 </style>
 
 

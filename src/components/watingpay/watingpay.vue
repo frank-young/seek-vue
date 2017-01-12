@@ -1,62 +1,64 @@
 <template>
-	<div class="wating-pay" ref="wpScroll">
-		<div class="bill-content" >
-			<back :text="text"></back>
-			<div class="wating-tab">
-				<div class="tab-panel">
-					<div class="panel-icon">
-						<i class="icon-money"></i>
+	<div>
+		<back :text="text"></back>
+		<div class="wating-pay" ref="wpScroll">
+			<div class="bill-content" >
+				<div class="wating-tab">
+					<div class="tab-panel">
+						<div class="panel-icon">
+							<i class="icon-money"></i>
+						</div>
+						<div class="panel-txt">
+							<h3>等待支付</h3>
+							<p>逾期未支付订单将自动取消</p>
+						</div>
 					</div>
-					<div class="panel-txt">
-						<h3>等待支付</h3>
-						<p>逾期未支付订单将自动取消</p>
+				</div>
+				<div class="title">西可咖啡</div>
+				<div class="dish">
+					<div class="dish-item" v-for="food in order.dish">
+						<div class="dish-name">{{food.name}}</div>
+						<div class="dish-count"><i>&times;</i>{{food.number}}</div>
+						<div class="dish-price">¥{{food.price}} </div>
 					</div>
 				</div>
-			</div>
-			<div class="title">西可咖啡</div>
-			<div class="dish">
-				<div class="dish-item" v-for="food in order.dish">
-					<div class="dish-name">{{food.name}}</div>
-					<div class="dish-count"><i>&times;</i>{{food.number}}</div>
-					<div class="dish-price">¥{{food.price}} </div>
+				<div class="dish">
+					<div class="dish-item">
+						<div class="dish-name"></div>
+						<div class="dish-t-price"><span>合计</span>¥{{totalPrice}}</div>
+					</div>
 				</div>
-			</div>
-			<div class="dish">
-				<div class="dish-item">
-					<div class="dish-name"></div>
-					<div class="dish-t-price"><span>合计</span>¥{{totalPrice}}</div>
+				<split></split>
+				<div class="title">订单详情</div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">订单号： <span>{{order.orderNum}}</span></div>
+					</div>
 				</div>
-			</div>
-			<split></split>
-			<div class="title">订单详情</div>
-			<div class="other">
-				<div class="dish-item">
-					<div class="dish-name">订单号： <span>{{order.orderNum}}</span></div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">支付方式： <span>在线支付</span></div>
+					</div>
 				</div>
-			</div>
-			<div class="other">
-				<div class="dish-item">
-					<div class="dish-name">支付方式： <span>在线支付</span></div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">下单时间： <span>{{order.time | date}}</span></div>
+					</div>
 				</div>
+				<split></split>
 			</div>
-			<div class="other">
-				<div class="dish-item">
-					<div class="dish-name">下单时间： <span>{{order.time | date}}</span></div>
+			<div class="wating-foot">
+				<div class="foot-left" @click.stop.prevent="cancel">
+					<div class="foot-price">
+						取消订单
+					</div>
 				</div>
+				<div class="foot-right" @click.stop.prevent="pay">
+	  				<div class="pay">
+	  					去支付
+	  				</div>
+	  			</div>
 			</div>
-			<split></split>
-		</div>
-		<div class="wating-foot">
-			<div class="foot-left" @click.stop.prevent="cancel">
-				<div class="foot-price">
-					取消订单
-				</div>
-			</div>
-			<div class="foot-right" @click.stop.prevent="pay">
-  				<div class="pay">
-  					去支付
-  				</div>
-  			</div>
 		</div>
 	</div>
 </template>
@@ -74,6 +76,7 @@ export default {
 		return {
 			orders: JSON.parse(window.localStorage.getItem('orders')),
 			order: null,
+			vId: window.localStorage.getItem('vId'),
 			text: '等待支付'
 		}
 	},
@@ -100,18 +103,18 @@ export default {
 			this.$router.push({path: '/order'})
 		},
 		pay() {
-			this.$router.push({name: 'pay', params: {id: this.$route.params.id}})
+			this.$router.push({name: 'pay'})
 		},
 		_setOrder() {
 			this.orders.forEach((order) => {
-				if (order.order.vId === this.$route.params.id) {
+				if (order.order.vId === this.vId) {
 					this.order = order.order
 				}
 			})
 		},
 		_cancelLocalOrdersData() {
 			this.orders.forEach((order) => {
-				if (order.order.vId === this.$route.params.id) {
+				if (order.order.vId === this.vId) {
 					order.order.wxpayType = 2
 				}
 			})
@@ -145,11 +148,10 @@ export default {
 	.wating-pay {
 		position: fixed;
 		left: 0;
-		top: 0;
-		bottom: 48px;
-		z-index: 60;
+		top: 48px;
+		bottom: 58px;
+		z-index: 16;
 		width: 100%;
-		height: 100%;
 		background-color: #f3f5f7;
 		.bill-content{
 			background-color: #fff;

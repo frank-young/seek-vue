@@ -20,11 +20,11 @@ const routes = [
   {path: '/goods', component: goods, name: 'goods'},
   {path: '/ratings', component: ratings, name: 'ratings'},
   {path: '/start', component: start, name: 'start'},
-  {path: '/pay/:id', component: pay, name: 'pay'},
-  {path: '/watingpay/:id', component: watingpay, name: 'watingpay'},
+  {path: '/pay/paydetail', component: pay, name: 'pay'},
+  {path: '/watingpay', component: watingpay, name: 'watingpay'},
   {path: '/success', component: success, name: 'success'},
-  {path: '/order/detail/:id', component: orderdetail, name: 'orderdetail'},
-  {path: '/order/cancel/:id', component: ordercancel, name: 'ordercancel'},
+  {path: '/order/detail', component: orderdetail, name: 'orderdetail'},
+  {path: '/order/cancel', component: ordercancel, name: 'ordercancel'},
   {path: '/order', component: order, name: 'order'}
 ]
 

@@ -4,6 +4,7 @@ var bodyParser = require('body-parser')
 var connect = require('connect')
 var mongoose = require('mongoose')
 var request = require('request')
+var WXPay = require('weixin-pay')
 // var Alidayuapp = require('alidayu-node')
 // var alidayuapp = new Alidayuapp('App Key', 'App Secret')
 var config = require('../config')
@@ -45,6 +46,12 @@ app.use(cookieSession({
     keys:['key1','key2'],
     maxAge: 20 * 60 * 1000
 }))
+
+var wxpay = WXPay({
+  appid: 'wx782db8ee3e80c4aa',
+  mch_id: '1295261101',
+  partner_key: 'seekbrandseekcafe521521521521521'
+})
 
 var appData = require('../data.json')
 var seller = appData.seller
@@ -169,11 +176,30 @@ apiRoutes.get('/table/:id',function(req,res){
   saveToken()
 })
 
-apiRoutes.get('/code/callback',function(req,res){
-  res.json({
-    errno:0,
-    data:res
+apiRoutes.get('/wxpay',function(req,res){
+  console.log('调用了支付签名')
+  let openid = req.query.openid
+  let ip = req.ip.match(/\d+\.\d+\.\d+\.\d+/)[0]
+  wxpay.getBrandWCPayRequestParams({
+      openid: openid,
+      body: '西可咖啡微信点餐',
+      detail: '西可咖啡微信点餐',
+      out_trade_no: '20170101'+Math.random().toString().substr(2, 10),
+      total_fee: 1,
+      spbill_create_ip: ip,
+      notify_url: 'http://frank.d1.natapp.cc/api/notify'
+  }, function(err, result){
+      res.json({
+          status: 1,
+          data: result
+      })
   })
+
+})
+
+apiRoutes.get('/notify',function(req,res){
+  console.log('请求了回掉')
+  res.send('<xml><return_code><![CDATA[SUCCESS]]></return_code> <return_msg><![CDATA[OK]]>')
 })
 
 app.use('/api',apiRoutes)

@@ -122,7 +122,8 @@ export default {
 			this._saveBillInfo(id)
 			this.$refs.alertmsg.show()
 			setTimeout(() => {
-				this.$router.push({name: 'pay', params: {id: id}})
+				window.localStorage.setItem('vId', id)
+				this.$router.push({name: 'pay'})
 			}, 1000)
 		},
 		_saveBillInfo(id) {

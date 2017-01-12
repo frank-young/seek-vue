@@ -32,7 +32,7 @@ export default {
 	},
 	methods: {
 		close() {
-			this.$router.push({name: 'goods'})
+			this.$router.push({name: 'start'})
 		},
 		order() {
 			this.$router.push({name: 'order'})
@@ -47,7 +47,7 @@ export default {
 	.success {
 		position: fixed;
 		left: 0;
-		top: 0;
+		top: 48px;
 		width: 100%;
 		height: 100%;
 		z-index: 60;

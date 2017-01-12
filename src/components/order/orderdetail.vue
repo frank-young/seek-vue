@@ -1,50 +1,52 @@
 <template>
-	<div class="order-detail" ref="odScroll">
-		<div class="order-content" >
-			<back :text="text"></back>
-			<div class="order-tab">
-				<div class="tab-panel">
-					<div class="panel-icon">
-						<i class="icon-checked"></i>
+	<div>
+		<back :text="text"></back>
+		<div class="order-detail" ref="odScroll">
+			<div class="order-content" >
+				<div class="order-tab">
+					<div class="tab-panel">
+						<div class="panel-icon">
+							<i class="icon-checked"></i>
+						</div>
+						<div class="panel-txt">
+							<h3>订单已完成</h3>
+							<p>如有疑问，请咨询服务员。</p>
+						</div>
 					</div>
-					<div class="panel-txt">
-						<h3>订单已完成</h3>
-						<p>如有疑问，请咨询服务员。</p>
+				</div>
+				<div class="title">西可咖啡</div>
+				<div class="dish">
+					<div class="dish-item" v-for="food in order.dish">
+						<div class="dish-name">{{food.name}}</div>
+						<div class="dish-count"><i>&times;</i>{{food.number}}</div>
+						<div class="dish-price">¥{{food.price}} </div>
 					</div>
 				</div>
-			</div>
-			<div class="title">西可咖啡</div>
-			<div class="dish">
-				<div class="dish-item" v-for="food in order.dish">
-					<div class="dish-name">{{food.name}}</div>
-					<div class="dish-count"><i>&times;</i>{{food.number}}</div>
-					<div class="dish-price">¥{{food.price}} </div>
+				<div class="dish">
+					<div class="dish-item">
+						<div class="dish-name"></div>
+						<div class="dish-t-price"><span>实付</span>¥{{totalPrice}}</div>
+					</div>
 				</div>
-			</div>
-			<div class="dish">
-				<div class="dish-item">
-					<div class="dish-name"></div>
-					<div class="dish-t-price"><span>实付</span>¥{{totalPrice}}</div>
+				<split></split>
+				<div class="title">订单详情</div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">订单号： <span>seek02_12344389475894379483</span></div>
+					</div>
 				</div>
-			</div>
-			<split></split>
-			<div class="title">订单详情</div>
-			<div class="other">
-				<div class="dish-item">
-					<div class="dish-name">订单号： <span>seek02_12344389475894379483</span></div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">支付方式： <span>在线支付</span></div>
+					</div>
 				</div>
-			</div>
-			<div class="other">
-				<div class="dish-item">
-					<div class="dish-name">支付方式： <span>在线支付</span></div>
+				<div class="other">
+					<div class="dish-item">
+						<div class="dish-name">下单时间： <span>2017-1-5 12:30</span></div>
+					</div>
 				</div>
+				<split></split>
 			</div>
-			<div class="other">
-				<div class="dish-item">
-					<div class="dish-name">下单时间： <span>2017-1-5 12:30</span></div>
-				</div>
-			</div>
-			<split></split>
 		</div>
 	</div>
 </template>
@@ -59,6 +61,7 @@ export default {
 		return {
 			orders: JSON.parse(window.localStorage.getItem('orders')),
 			order: null,
+			vId: window.localStorage.getItem('vId'),
 			text: '订单完成'
 		}
 	},
@@ -82,7 +85,7 @@ export default {
 	methods: {
 		_setOrder() {
 			this.orders.forEach((order) => {
-				if (order.order.vId === this.$route.params.id) {
+				if (order.order.vId === this.vId) {
 					this.order = order.order
 				}
 			})
@@ -112,8 +115,8 @@ export default {
 	.order-detail {
 		position: fixed;
 		left: 0;
-		top: 0;
-		bottom: 48px;
+		top: 48px;
+		bottom: 58px;
 		z-index: 10;
 		width: 100%;
 		height: 100%;

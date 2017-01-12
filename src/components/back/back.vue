@@ -14,9 +14,6 @@ export default {
 	},
 	methods: {
 		back(event) {
-			if (!event._constructed) {
-				return true
-			}
 			this.$router.go(-1)
 		}
 	}
@@ -25,6 +22,10 @@ export default {
 
 <style lang="less">
 	.back{
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 20;
 		width: 100%;
 		height: 48px;
 		line-height: 48px;

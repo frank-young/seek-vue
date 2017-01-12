@@ -1,28 +1,32 @@
 <template>
-	<div class="order" ref="orderScroll">
-		<div>
-			<back :text="text"></back>
-			<div class="order-no" v-show="!orders">
-				没有订单，请去点餐...
-			</div>
-			<div class="order-item" v-for="order in orders" @click="orderDetail(order.order.vId, order.order.wxpayType, $event)">
-				<div class="item-con">
-					<div class="con-text">
-						<h3>西可咖啡</h3>
-						<p>{{order.order.time | date}}</p>
-					</div>
-					<div class="con-status" v-html="payType(order.order.wxpayType)">
-					</div>
+	<div>
+		<div class="order-title-bar">
+			<span class="title-bar-txt">{{text}}</span>
+		</div>
+		<div class="order" ref="orderScroll">
+			<div class="order-w">
+				<div class="order-no" v-show="!orders">
+					没有订单，请去点餐...
 				</div>
-				<div class="item-des">
-					<div class="des-text">
-						{{order.order.dish[0].name}}
+				<div class="order-item" v-for="order in orders" @click="orderDetail(order.order.vId, order.order.wxpayType, $event)">
+					<div class="item-con">
+						<div class="con-text">
+							<h3>西可咖啡</h3>
+							<p>{{order.order.time | date}}</p>
+						</div>
+						<div class="con-status" v-html="payType(order.order.wxpayType)">
+						</div>
 					</div>
-					<div class="des-total">
-						¥{{order.order.realTotal | currency}}
+					<div class="item-des">
+						<div class="des-text">
+							{{order.order.dish[0].name}}
+						</div>
+						<div class="des-total">
+							¥{{order.order.realTotal | currency}}
+						</div>
 					</div>
+					<split></split>
 				</div>
-				<split></split>
 			</div>
 		</div>
 	</div>
@@ -41,13 +45,6 @@ export default {
 		}
 	},
 	computed: {
-		// totalPrice() {
-		// 	let total = 0
-		// 	this.orderData.order.dish.forEach((food) => {
-		// 		total += Number(food.price * food.number)
-		// 	})
-		// 	return total.toFixed(2)
-		// }
 	},
 	created() {
 		this.$nextTick(() => {
@@ -76,13 +73,17 @@ export default {
 			if (!event._constructed) {
 				return true
 			}
+			this._saveVId(id)
 			if (type === 0) {
-				this.$router.push({name: 'watingpay', params: {id: id}})
+				this.$router.push({name: 'watingpay'})
 			} else if (type === 1) {
-				this.$router.push({name: 'orderdetail', params: {id: id}})
+				this.$router.push({name: 'orderdetail'})
 			} else {
-				this.$router.push({name: 'ordercancel', params: {id: id}})
+				this.$router.push({name: 'ordercancel'})
 			}
+		},
+		_saveVId(id) {
+			window.localStorage.setItem('vId', id)
 		}
 	},
 	components: {
@@ -107,14 +108,30 @@ export default {
 			transform: scale(1,.5);
 		}
 	}
+	.order-title-bar{
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 15;
+		width: 100%;
+		height: 48px;
+		line-height: 48px;
+		background-color: #3290e8;
+		.title-bar-txt {
+			display: inline-block;
+			margin-left: 20px;
+			vertical-align: top;
+			font-size: 16px;
+			color: #fff
+		}	
+	}
 	.order {
 		position: fixed;
 		left: 0;
-		top: 0;
-		bottom: 48px;
+		top: 48px;
+		bottom: 58px;
 		z-index: 10;
 		width: 100%;
-		height: 100%;
 		background-color: #f3f5f7;
 		.order-no {
 			font-size: 16px;
