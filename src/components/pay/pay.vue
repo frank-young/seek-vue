@@ -7,7 +7,7 @@
 		<div class="pay-wrap" ref="payScroll">
 			<div class="bill-content" >
 				<div class="timer">
-					支付剩余时间：<span>{{timer}}</span>
+					支付剩余时间：<settimer :timer="timer" :vId="vId" ref="settimerfunc"></settimer>
 				</div>
 				<div class="other">
 					<div class="dish-item">
@@ -62,6 +62,7 @@ import split from 'components/split/split'
 import back from 'components/back/back'
 import sendcode from 'components/sendcode/sendcode'
 import alertmsg from 'components/alertmsg/alertmsg'
+import settimer from 'components/settimer/settimer'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 
@@ -81,7 +82,7 @@ export default {
 			text: '在线支付',
 			payTypeShow: true,
 			payType: 1,
-			timer: 30,
+			timer: 0,
 			stop: false,
 			Interval: null,
 			alertmsg: '付款成功',
@@ -101,7 +102,9 @@ export default {
 			this.scroll = new BScroll(this.$refs.payScroll, {
 				click: true
 			})
+			this.$refs.settimerfunc.starttimer()
 		})
+		this.timer = Math.ceil((new Date(this.order.order.time) - 0) / 1000)
 	},
 	methods: {
 		close() {
@@ -135,14 +138,12 @@ export default {
 		},
 		pay() {
 			if (this.payType === 1) {
-				console.log('微信支付')
-				// this._targetToSuccess()
+				this._saveOrderSession(this.order)
 				this._getWxpayData()
 			} else if (this.payType === 2) {
 				this.$refs.code.verify((res) => {
 					res = res.body
 					if (res.errno === ERRNO_OK) {
-						// this._pay()
 						this._saveOrder(this.order, res.phone)
 						this._reduceMoney(res.phone)
 					}
@@ -179,7 +180,7 @@ export default {
 					'domainlocal': order.domain
 				}
 			}
-			this.$http.post(HOST + '/table/save/order', statusData, options).then((res) => {
+			this.$http.post(HOST_LOCAL + '/table/save/order', statusData, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 					console.log('success')
@@ -233,8 +234,44 @@ export default {
 		_saveLocalOrdersData() {
 			window.localStorage.setItem('orders', JSON.stringify(this.orders))
 		},
+		_saveOrderSession(order) {
+			let date = new Date()
+			let Y = date.getFullYear()
+			let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1)
+			let D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate())
+
+			let options = {}
+			let data = {
+				'alldata': {
+					'order': order,
+						'statusOrder': {
+						'order_num': order.order.orderNum,
+						'username': '',
+						'phone': '',
+						'status': 1,
+						'year': Y,
+						'month': M,
+						'day': D,
+						'shopid': '',
+						'domainlocal': order.domain
+					}
+				}
+			}
+
+			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+			options.emulateJSON = true
+
+			Vue.http.post(HOST_LOCAL + '/api/save/order', data, options).then((res) => {
+				res = res.body
+				if (res.status === STATUS) {
+					console.log('success')
+				} else {
+					console.log(res)
+				}
+			})
+		},
 		_getWxpayData() {
-			this.$http.get(HOST_LOCAL + '/api/wxpay?openid=' + this.openid).then((res) => {
+			this.$http.get(HOST_LOCAL + '/api/wxpay?openid=' + this.openid + '&out_trade_no=' + this.order.order.orderNum + '&total_fee=' + this.order.order.realTotal).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 					this.wxpayData = res.data
@@ -276,43 +313,6 @@ export default {
 							if (order.order.vId === vIdCopy) {
 								order.order.wxpayType = 1
 								order.order.payTime = new Date()
-								let options = {}
-								let data = {
-									'order': order
-								}
-
-								options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-								options.emulateJSON = true
-
-								Vue.http.post(HOST + '/api/order', data, options).then((res) => {
-									res = res.body
-									if (res.status === STATUS) {
-										console.log('success')
-									} else {
-										console.log(res)
-									}
-								})
-								let statusData = {
-									'statusOrder': {
-										'order_num': order.order.orderNum,
-										'username': '',
-										'phone': '',
-										'status': 1,
-										'year': order.order.year,
-										'month': order.order.month,
-										'day': order.order.day,
-										'shopid': '',
-										'domainlocal': order.domain
-									}
-								}
-								Vue.http.post(HOST + '/table/save/order', statusData, options).then((res) => {
-									res = res.body
-									if (res.status === STATUS) {
-										console.log('success')
-									} else {
-										console.log(res)
-									}
-								})
 							}
 						})
 						window.localStorage.setItem('orders', JSON.stringify(ordersCopy))
@@ -341,7 +341,8 @@ export default {
 		split,
 		back,
 		sendcode,
-		alertmsg
+		alertmsg,
+		settimer
 	}
 }
 </script>

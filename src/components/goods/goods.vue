@@ -17,7 +17,7 @@
 	  					<h2 class="title">{{item.name}} </h2>
 	  					<ul>
 	  						<li @click="selectFood(food,$event)" v-for="food in item.foods" class="food-item">
-	  							<div class="icon"><img :src="food.icon" alt=""></div>
+	  							<div class="icon"><img src="./img/cafe.png" alt=""></div>
 	  							<div class="content">
 	  								<h3 class="name">{{food.name}}</h3>
 	  								<p class="desc">{{food.description}}</p>
@@ -52,7 +52,7 @@ import cartcontrol from 'components/cartcontrol/cartcontrol'
 import food from 'components/food/food'
 
 const ERR_OK = 0
-// const HOST = 'http://127.0.0.1:3000'
+const HOST = 'http://192.168.31.217:3000'
 
 export default {
 	props: {
@@ -100,7 +100,7 @@ export default {
 	},
 	created() {
 		this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-		this.$http.get('/api/goods').then((res) => {
+		this.$http.get(HOST + '/api/goods/' + this.domain).then((res) => {
 			res = res.body
             if (res.errno === ERR_OK) {
                 this.goods = res.data

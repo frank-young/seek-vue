@@ -3,7 +3,7 @@
 		<div v-show="showFlag" class="food" ref="foodScroll">
 			<div class="food-content">
 				<div class="img-header">
-					<img src="" alt="" :src="food.image">
+					<img src="./img/cafemachine.png">
 					<div class="back" @click="hidden">
 						<i class="icon-arrow_lift"></i>
 					</div>

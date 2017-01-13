@@ -25,6 +25,14 @@
 							¥{{order.order.realTotal | currency}}
 						</div>
 					</div>
+					<div class="item-des">
+						<div class="des-text">
+						</div>
+						<div class="des-total">
+							<span class="btn-pay" v-show="order.order.wxpayType === 0">去支付</span>	
+							<span class="btn-reorder" v-show="order.order.wxpayType !== 0" >查看详情</span>	
+						</div>
+					</div>
 					<split></split>
 				</div>
 			</div>
@@ -167,6 +175,7 @@ export default {
 				display: flex;
 				justify-content: space-between;
 				padding: 15px;
+				.b-1px();
 				.des-text {
 					font-size: 14px;
 					color: #555;
@@ -176,7 +185,23 @@ export default {
 					color: #222;
 					font-weight: normal;
 				}
-			}	
+			}
+			.btn-pay {
+				display: inline-block;
+				padding: 5px 10px;
+				font-size: 14px;
+				color: #f60;
+				border: 1px solid #f60;
+				border-radius: 2px;
+			}
+			.btn-reorder {
+				display: inline-block;
+				padding: 5px 10px;
+				font-size: 14px;
+				color: #3290e8;
+				border: 1px solid #3290e8;
+				border-radius: 2px;
+			}
 		}
 		.red {
 			color: #f01414;

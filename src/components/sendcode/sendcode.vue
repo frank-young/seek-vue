@@ -141,7 +141,7 @@ export default {
 			flex: 0 0 80px;
 			width: 80px;
 			font-size: 14px;
-			line-height: 29px;
+			line-height: 36px;
 			color: #333;
 		}
 
@@ -152,10 +152,10 @@ export default {
 				display: block;
 				width: 100%;
 				box-sizing: border-box;
-				padding: 5px 10px;
+				padding: 8px 10px;
 				outline: none;
 				border: 1px solid #ddd;
-				font-size: 14px;
+				font-size: 16px;
 			}
 		}
 		.code-btn {
@@ -163,9 +163,9 @@ export default {
 			// width: 125px;
 			margin-left: 15px;
 			.btn {
-				height: 28px;
+				height: 36px;
 				padding: 0 10px;
-				line-height: 28px;
+				line-height: 36px;
 				display: inline-block;
 				background-color: rgb(252, 97, 32);
 				border: 0;

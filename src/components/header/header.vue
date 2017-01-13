@@ -2,7 +2,7 @@
   <div class="header">
     <div class="content-wrap">
     	<div class="avatar">
-    		<img :src="seller.avatar" width="64" height="64">
+    		<img src="./img/seek.jpg" width="64" height="64">
     	</div>
     	<div class="content">
     		<div class="title">
@@ -21,13 +21,16 @@
     	<div class="support-count" v-on:click="showDetail">
     		<span class="count">{{num}}</span>
     	</div>
+    	<div class="back-page" v-on:click="backPage">
+    		<i class="icon-close"></i>
+    	</div>
     </div>
     <div class="tip-wrap" v-on:click="showDetail">
     	<span class="tip-title"></span>
     	<span class="tip-text">{{seller.introduction}}</span><i class='icon-keyboard_arrow_right'></i>
     </div>
     <div class="background">
-    	<img :src="seller.avatar" width="100%" >
+    	<img src="./img/seek.jpg" width="100%" >
     </div>
     <div v-show="detailShow" class="detail">
     	<div class="detail-main">
@@ -52,6 +55,16 @@
     			营业时间：{{seller.open_time}} <br>
     			电话：{{seller.telephone}} <br>
     		</div>
+    		<div class="detail-sub-title">
+    			分店信息
+    		</div>
+    		<div class="detail-bulletin">
+    			<div class="shop-address" v-for="shop in seller.shop_address">
+    				<p>门店地址：{{shop.city}}{{shop.district}}{{shop.address}} <br></p>
+    				<p>电话：{{shop.telephone}}<br></p>
+    			</div>
+    			
+    		</div>
     	</div>
     	<div class="detail-close">
     		<i class="icon-close" v-on:click="hideDetail"></i>
@@ -62,7 +75,9 @@
 
 <script>
 import star from 'components/star/star'
+import VueRouter from 'vue-router'
 
+const router = new VueRouter()
 export default {
 	props: {
 		seller: {
@@ -83,10 +98,14 @@ export default {
 		},
 		hideDetail() {
 			this.detailShow = false
+		},
+		backPage() {
+			router.push('start')
 		}
 	},
 	created() {
 		this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+		this.seller.score = 5
 	},
 	components: {
 		star
@@ -100,7 +119,7 @@ export default {
 	.header {
 		.pos(r);
 		color: @gf;
-		background-color: rgba(7, 17, 27, 0.5);
+		background-color: rgba(7, 17, 27, 0.8);
 		overflow: hidden;
 		.content-wrap{
 			padding: 24px 12px 18px 24px;
@@ -134,7 +153,7 @@ export default {
 				.m(l,6px);
 				font-size: 16px;
 				line-height: 18px;
-				font-weight: bold;
+				font-weight: normal;
 			}
 		}
 		.description {
@@ -194,6 +213,17 @@ export default {
 				margin-left: 2px;
 			}
 		}
+		.back-page{
+			position: absolute;
+			right: 5px;
+			top: 5px;
+			width: 30px;
+			height: 30px;
+			i{
+				font-size: 30px;
+				color: #fff;
+			}
+		}
 		.tip-wrap{
 			height: 28px;
 			line-height: 28px;
@@ -216,6 +246,7 @@ export default {
 			.tip-text{
 				vertical-align: top;
 				font-size: 10px;
+				font-weight: normal;
 			}
 			.icon-keyboard_arrow_right{
 				.pos(a);
@@ -228,12 +259,12 @@ export default {
 		}
 		.background{
 			.pos(a);
-			top: 0;
+			top: -90px;
 			left: 0;
 			width: 100%;
 			height: 100%;
 			z-index: -1;
-			filter:blur(10px);
+			filter:blur(5px);
 		}
 		.detail{
 			position: fixed;
@@ -314,6 +345,24 @@ export default {
 				font-size: 32px;
 				color: rgba(255, 255, 255, 0.5)
 			}
+		}
+		
+		.shop-address{
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+			.b-1px()
+		}
+	}
+	.b-1px(@x:#fff){
+		position: relative;
+		&:after{
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			border-bottom: 1px dotted #fff;
+			transform: scale(1,.5);
 		}
 	}
 

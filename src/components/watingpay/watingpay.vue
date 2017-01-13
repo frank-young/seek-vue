@@ -55,7 +55,7 @@
 				</div>
 				<div class="foot-right" @click.stop.prevent="pay">
 	  				<div class="pay">
-	  					去支付
+	  					去支付<span>（还剩 <settimer :timer="timer" :vId="vId" ref="settimerfunc"></settimer>）</span>
 	  				</div>
 	  			</div>
 			</div>
@@ -67,6 +67,7 @@
 import BScroll from 'better-scroll'
 import split from 'components/split/split'
 import back from 'components/back/back'
+import settimer from 'components/settimer/settimer'
 // import VueRouter from 'vue-router'
 
 // const router = new VueRouter()
@@ -77,7 +78,8 @@ export default {
 			orders: JSON.parse(window.localStorage.getItem('orders')),
 			order: null,
 			vId: window.localStorage.getItem('vId'),
-			text: '等待支付'
+			text: '等待支付',
+			timer: 0
 		}
 	},
 	computed: {
@@ -94,8 +96,10 @@ export default {
 			this.scroll = new BScroll(this.$refs.wpScroll, {
 				click: true
 			})
+			this.$refs.settimerfunc.starttimer()
 		})
 		this._setOrder()
+		this.timer = Math.ceil((new Date(this.order.time) - 0) / 1000)
 	},
 	methods: {
 		cancel() {
@@ -126,7 +130,8 @@ export default {
 	},
 	components: {
 		split,
-		back
+		back,
+		settimer
 	}
 }
 </script>
@@ -273,6 +278,9 @@ export default {
 					border-radius: 2px;
 					background-color: rgb(252, 97, 32);
 					color: #fff;
+					span{
+						font-size: 15px;
+					}
 				}
 			}
 
