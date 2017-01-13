@@ -170,6 +170,9 @@ export default {
 				'isPetcard': false,
 				'dish': this._foods(foods),
 				'wxpayType': 0,
+				'acceptStatus': false,
+				'editPeople': '扫码点餐',
+				'wx': true,
 				'time': new Date(),
 				'vId': id
 			}

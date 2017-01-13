@@ -143,25 +143,13 @@ export default {
 					res = res.body
 					if (res.errno === ERRNO_OK) {
 						// this._pay()
-						this._saveOrder(this.order)
+						this._saveOrder(this.order, res.phone)
 						this._reduceMoney(res.phone)
 					}
 				})
 			}
 		},
-		_pay() {
-			let options = {}
-
-			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-			options.emulateJSON = true
-
-			this.$http.post(HOST + '/api/order', this.order, options).then((res) => {
-				res = res.body
-				if (res.status === STATUS) {
-				}
-			})
-		},
-		_saveOrder(order) {
+		_saveOrder(order, phone) {
 			let options = {}
 			let data = {
 				'order': order
@@ -171,6 +159,27 @@ export default {
 			options.emulateJSON = true
 
 			this.$http.post(HOST + '/api/order', data, options).then((res) => {
+				res = res.body
+				if (res.status === STATUS) {
+					console.log('success')
+				} else {
+					console.log(res)
+				}
+			})
+			let statusData = {
+				'statusOrder': {
+					'order_num': order.order.orderNum,
+					'username': '',
+					'phone': phone,
+					'status': 1,
+					'year': order.order.year,
+					'month': order.order.month,
+					'day': order.order.day,
+					'shopid': '',
+					'domainlocal': order.domain
+				}
+			}
+			this.$http.post(HOST + '/table/save/order', statusData, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 					console.log('success')
@@ -276,6 +285,27 @@ export default {
 								options.emulateJSON = true
 
 								Vue.http.post(HOST + '/api/order', data, options).then((res) => {
+									res = res.body
+									if (res.status === STATUS) {
+										console.log('success')
+									} else {
+										console.log(res)
+									}
+								})
+								let statusData = {
+									'statusOrder': {
+										'order_num': order.order.orderNum,
+										'username': '',
+										'phone': '',
+										'status': 1,
+										'year': order.order.year,
+										'month': order.order.month,
+										'day': order.order.day,
+										'shopid': '',
+										'domainlocal': order.domain
+									}
+								}
+								Vue.http.post(HOST + '/table/save/order', statusData, options).then((res) => {
 									res = res.body
 									if (res.status === STATUS) {
 										console.log('success')
