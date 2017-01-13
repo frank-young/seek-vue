@@ -1,6 +1,6 @@
 <template>
 	<div class="goods-wrap">
-		<v-header v-bind:seller="seller"></v-header>
+		<v-header v-bind:seller="seller" :num="num"></v-header>
 	  	<div class="goods">
 	  		<div class="menu-wrap" ref="menuWrap">
 	  			<ul>
@@ -67,6 +67,7 @@ export default {
 	data() {
 		return {
 			domain: window.localStorage.getItem('domain'),
+			num: window.localStorage.getItem('num'),
 			goods: [],
 			listHeight: [],
 			scrollY: 0,

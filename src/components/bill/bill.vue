@@ -42,7 +42,7 @@
 							<option value="10">10</option>
 						</select>
 						<div class="dish-name">用餐人数</div>
-						<div class="dish-other"><span v-show="dishNumber===1">选择用餐人数</span><span v-show="dishNumber!==1">{{dishNumber}}人</span> </div>
+						<div class="dish-other"><span v-show="dishNumber===1">选择用餐人数</span><span v-show="dishNumber!==1">{{dishNumber}}人</span> <i class="icon-keyboard_arrow_right"></i></div>
 					</div>
 				</div>
 				<split></split>
@@ -270,7 +270,6 @@ export default {
 				padding: 15px;
 				font-size: 14px;
 				display: flex;
-				
 			}
 			.dish-name{
 				flex: 1;
@@ -314,6 +313,10 @@ export default {
 					color: #666;
 					font-size: 12px;
 					line-height: 12px;
+				}
+				i{
+					color: #666;
+					vertical-align: middle;
 				}
 				
 			}

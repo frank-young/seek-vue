@@ -8,24 +8,23 @@
     		<div class="title">
     			<span class="brand">
     			</span>
-    			<span class="name">{{seller.name}}</span>
+    			<span class="name">{{seller.business_name}}({{seller.branch_name}})</span>
     		</div>
     		<div class="description">
-    			{{seller.description}}/{{seller.deliveryTime}}分钟送达
+    			{{seller.city}}{{seller.district}}{{seller.address}}
     		</div>
-    		<div v-if="seller.supports" class="support">
-    			<span class="icon" v-bind:class="classMap[seller.supports[0].type]"></span>
-    			<span class="text">{{seller.supports[0].description}}</span>
+    		<div class="support">
+    			<!-- <span class="icon" v-bind:class="classMap[seller.supports[0].type]"></span> -->
+    			<span class="text">营业时间：{{seller.open_time}}</span>
     		</div>
     	</div>
-    	<div v-if="seller.supports" class="support-count" v-on:click="showDetail">
-    		<span class="count">{{seller.supports.length}}个</span>
-    		<i class="icon-keyboard_arrow_right"></i>
+    	<div class="support-count" v-on:click="showDetail">
+    		<span class="count">{{num}}</span>
     	</div>
     </div>
     <div class="tip-wrap" v-on:click="showDetail">
     	<span class="tip-title"></span>
-    	<span class="tip-text">{{seller.bulletin}}</span><i class='icon-keyboard_arrow_right'></i>
+    	<span class="tip-text">{{seller.introduction}}</span><i class='icon-keyboard_arrow_right'></i>
     </div>
     <div class="background">
     	<img :src="seller.avatar" width="100%" >
@@ -39,19 +38,19 @@
     			<star v-bind:size="48" v-bind:score="seller.score"></star>
     		</div>
     		<div class="detail-sub-title">
-    			优惠信息
+    			关于SEEK
     		</div>
-    		<div class="detail-supports">
-    			<div class="detail-list support" v-for=" support in seller.supports">
-    				<span class="icon" v-bind:class="classMap[support.type]"></span>
-    				{{support.description}}
-    			</div>
+    		<div class="detail-bulletin">
+    			{{seller.introduction}} <br>
     		</div>
     		<div class="detail-sub-title">
     			商家公告
     		</div>
     		<div class="detail-bulletin">
-    			{{seller.bulletin}}
+    			特殊：{{seller.special}} <br>
+    			门店地址：{{seller.city}}{{seller.district}}{{seller.address}} <br>
+    			营业时间：{{seller.open_time}} <br>
+    			电话：{{seller.telephone}} <br>
     		</div>
     	</div>
     	<div class="detail-close">
@@ -68,6 +67,9 @@ export default {
 	props: {
 		seller: {
 			type: Object
+		},
+		num: {
+			type: String
 		}
 	},
 	data() {
@@ -175,15 +177,16 @@ export default {
 		.support-count{
 			.pos(a);
 			right: 12px;
-			bottom: 18px;
-			padding: 0 8px;
-			height: 24px;
-			line-height: 24px;
-			.border-radius(12px);
-			background-color: rgba(0, 0, 0, 0.2);
+			bottom: 12px;
+			padding: 0 12px;
+			height: 28px;
+			line-height: 28px;
+			.border-radius(14px);
+			background-color: rgba(245, 99, 100, 1);
 			.ta(c);
 			.count{
-				font-size: 10px;
+				font-weight: normal;
+				font-size: 14px;
 			}
 			.icon-keyboard_arrow_right{
 				font-size: 10px;

@@ -22,15 +22,17 @@
 import Vue from 'vue'
 
 const ERR_OK = 0
+const HOST = 'http://192.168.31.217:3000'
 
 export default {
     data() {
         return {
-            seller: {}
+            seller: {},
+            domain: window.localStorage.getItem('domain')
         }
     },
     created() {
-        this.$http.get('/api/seller').then((res) => {
+        this.$http.get(HOST + '/wechat/shopinfo/' + this.domain).then((res) => {
             res = res.body
             if (res.errno === ERR_OK) {
                 this.seller = res.data
