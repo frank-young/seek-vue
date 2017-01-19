@@ -55,16 +55,16 @@ app.use(router)
 var apiRoutes = express.Router()
 
 apiRoutes.post('/code/send',function(req,res){
-  let r = new YunPianSDK()
-  let apikey = '4ed82bab99b0b150113955ae56fcb276'
-  let mobile = req.body.phone
-  let text = '【西可咖啡】您的验证码是'
+  var r = new YunPianSDK()
+  var apikey = '4ed82bab99b0b150113955ae56fcb276'
+  var mobile = req.body.phone
+  var text = '【西可咖啡】您的验证码是'
 
   r.apikey = apikey
   r.mobile = mobile
   r.text = text
   if(!req.cookies.isSend){
-    let re = r.sendMsg()
+    var re = r.sendMsg()
     re.then(function(value) {
       res.cookie('isSend', 1, {maxAge: 60 * 1000})
       req.session.mobile = value.result.mobile
@@ -85,10 +85,10 @@ apiRoutes.post('/code/send',function(req,res){
 })
 
 apiRoutes.post('/code/verify',function(req,res){
-  let codeInput = req.body.code
-  let phoneInput = req.body.phone
-  let code = req.session.code
-  let mobile = req.session.mobile
+  var codeInput = req.body.code
+  var phoneInput = req.body.phone
+  var code = req.session.code
+  var mobile = req.session.mobile
   if (codeInput === code && phoneInput === mobile) {
     res.json({
       errno:0,
@@ -151,10 +151,10 @@ apiRoutes.get('/table/:id',function(req,res){
 
 apiRoutes.get('/wxpay',function(req,res){
   console.log('调用了支付签名')
-  let openid = req.query.openid
-  let orderNum = req.query.out_trade_no
-  let total_fee = req.query.total_fee
-  let ip = req.ip.match(/\d+\.\d+\.\d+\.\d+/)[0]
+  var openid = req.query.openid
+  var orderNum = req.query.out_trade_no
+  var total_fee = req.query.total_fee
+  var ip = req.ip.match(/\d+\.\d+\.\d+\.\d+/)[0]
   wxpay.getBrandWCPayRequestParams({
       openid: openid,
       body: '西可咖啡微信点餐',
@@ -227,9 +227,9 @@ apiRoutes.post('/notify',xmlparser({trim: false, explicitArray: false}),function
 })
 
 apiRoutes.post('/save/order',function(req,res){
-  let order = req.body.alldata.order
-  let statusOrder = req.body.alldata.statusOrder
-  let orderNum = req.body.alldata.order.order.orderNum
+  var order = req.body.alldata.order
+  var statusOrder = req.body.alldata.statusOrder
+  var orderNum = req.body.alldata.order.order.orderNum
 
   var _info
     _info = new Info({
