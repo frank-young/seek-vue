@@ -68,8 +68,7 @@ import Vue from 'vue'
 
 const router = new VueRouter()
 const wx = require('weixin-js-sdk')
-const HOST = 'http://192.168.31.217:3000'
-const HOST_LOCAL = 'http://frank.d1.natapp.cc'
+const HOST = 'http://wn50.cn'
 const STATUS = 1
 const ERRNO_OK = 0
 
@@ -180,7 +179,7 @@ export default {
 					'domainlocal': order.domain
 				}
 			}
-			this.$http.post(HOST_LOCAL + '/table/save/order', statusData, options).then((res) => {
+			this.$http.post('/table/save/order', statusData, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 					console.log('success')
@@ -261,7 +260,7 @@ export default {
 			options.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 			options.emulateJSON = true
 
-			Vue.http.post(HOST_LOCAL + '/api/save/order', data, options).then((res) => {
+			Vue.http.post('/api/save/order', data, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 					console.log('success')
@@ -271,7 +270,7 @@ export default {
 			})
 		},
 		_getWxpayData() {
-			this.$http.get(HOST_LOCAL + '/api/wxpay?openid=' + this.openid + '&out_trade_no=' + this.order.order.orderNum + '&total_fee=' + this.order.order.realTotal).then((res) => {
+			this.$http.get('/api/wxpay?openid=' + this.openid + '&out_trade_no=' + this.order.order.orderNum + '&total_fee=' + this.order.order.realTotal).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 					this.wxpayData = res.data

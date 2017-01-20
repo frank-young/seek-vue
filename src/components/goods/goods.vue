@@ -52,7 +52,7 @@ import cartcontrol from 'components/cartcontrol/cartcontrol'
 import food from 'components/food/food'
 
 const ERR_OK = 0
-const HOST = 'http://192.168.31.217:3000'
+const HOST = 'http://wn50.cn'
 
 export default {
 	props: {
