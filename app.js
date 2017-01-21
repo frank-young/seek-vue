@@ -5,7 +5,6 @@ var mongoose = require('mongoose')
 var request = require('request')
 var WXPay = require('weixin-pay')
 var xmlparser = require('express-xml-bodyparser')
-var config = require('./config')
 var path = require('path')
 var express = require('express')
 var cookieSession = require('cookie-session')
@@ -111,6 +110,7 @@ apiRoutes.get('/table/:id',function(req,res){
 
   var code = req.query.code
   // 用获取code换取token
+
   var url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + appid + '&secret=' + appSecret + '&code=' + code + '&grant_type=authorization_code'
   var saveToken = function() {
       request(url, function(error, response, body) {
@@ -121,20 +121,30 @@ apiRoutes.get('/table/:id',function(req,res){
               var openid = data.openid
 
               req.session.openid = openid
-              Table.findById(id, function(err, table) {
-                  if (table) {
-                      res.render('wxorder', {
-                          status: 1,
-                          num: table.num,
-                          domain: table.domainlocal,
-                          openid: openid
-                      })
-                  } else {
-                      res.json({
-                          status: 0,
-                          msg: '扫描失败，请重新扫描二维码！'
-                      })
-                  }
+              // if(mongoose.Types.ObjectId.isValid(id)){
+              //   var _id = mongoose.Types.ObjectId(id);
+              // } else {
+              //   var _id = id
+              // }
+              
+              Table.findOne({'_id': id}, function(err, table) {
+                if (err) {
+                  console.log(err)
+                }
+                console.log(table)
+                if (table) {
+                    res.render('wxorder', {
+                        status: 1,
+                        num: table.num,
+                        domain: table.domainlocal,
+                        openid: openid
+                    })
+                } else {
+                    res.json({
+                        status: 0,
+                        msg: '扫描失败，请重新扫描二维码'
+                    })
+                }
               })
 
           } else {

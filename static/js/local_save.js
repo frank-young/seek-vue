@@ -4,7 +4,7 @@
 		openid = g('openid').getAttribute('data-openid')
 	localSave(num,domain,openid)
 
-	var url = 'http://frank.d1.natapp.cc/'
+	var url = 'http://wx.wn50.cn/'
 
 	window.location.href = url
 })()
