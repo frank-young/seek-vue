@@ -33,7 +33,7 @@ app.set('trust proxy', 1)
 app.use(cookieParser())
 app.use(cookieSession({
     name: 'session',
-    keys:['key1','key2'],
+    keys: ['key1','key2'],
     maxAge: 20 * 60 * 1000
 }))
 
