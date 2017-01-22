@@ -146,7 +146,6 @@ apiRoutes.get('/table/:id',function(req,res){
                     })
                 }
               })
-
           } else {
               res.json({
                   status: 0,
@@ -179,7 +178,6 @@ apiRoutes.get('/wxpay',function(req,res){
           data: result
       })
   })
-
 })
 
 apiRoutes.post('/notify',xmlparser({trim: false, explicitArray: false}),function(req,res){
@@ -233,7 +231,6 @@ apiRoutes.post('/notify',xmlparser({trim: false, explicitArray: false}),function
       })
     }) 
   }
-  
 })
 
 apiRoutes.post('/save/order',function(req,res){
