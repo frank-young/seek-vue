@@ -188,7 +188,7 @@ apiRoutes.post('/notify',xmlparser({trim: false, explicitArray: false}),function
                     '<return_msg><![CDATA[OK]]></return_msg>'+
                   '</xml>'
   if (msg.result_code === 'SUCCESS') {
-    var HOST = 'http://192.168.31.217:3000'
+    var HOST = 'http://139.129.239.39:3000'
     console.log(msg.out_trade_no)
     Info.findOne({'orderNum': msg.out_trade_no},function(err,info){
       if(err){
