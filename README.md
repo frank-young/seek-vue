@@ -10,4 +10,4 @@
 * 自主的微信会员卡支付系统
 
 
-[demo](./resource/demo.png)
+[demo](https://github.com/frank-young/seek-vue/blob/master/resource/demo.png)
