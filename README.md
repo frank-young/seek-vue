@@ -9,5 +9,5 @@
 * 微信支付
 * 自主的微信会员卡支付系统
 
-
-[demo](https://github.com/frank-young/seek-vue/blob/master/resource/demo.png)
+## 扫描二维码查看demo
+[demo](./resource/demo.png)
