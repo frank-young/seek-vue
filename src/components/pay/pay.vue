@@ -179,7 +179,7 @@ export default {
 					'domainlocal': order.domain
 				}
 			}
-			this.$http.post('/table/save/order', statusData, options).then((res) => {
+			this.$http.post(HOST + '/table/save/order', statusData, options).then((res) => {
 				res = res.body
 				if (res.status === STATUS) {
 					console.log('success')
