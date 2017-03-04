@@ -189,6 +189,7 @@ export default {
 					obj.price = d.price
 					obj.reducePrice = d.price
 					obj.number = d.count
+					obj.cate = d.cate
 					arr.push(obj)
 				})
 				return arr
