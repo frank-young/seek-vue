@@ -86,18 +86,7 @@ export default {
 			color: #333;
 		}
 		.cart-add{
-			
+
 		}
 	}
 </style>
-
-
-
-
-
-
-
-
-
-
-

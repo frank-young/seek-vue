@@ -40,6 +40,6 @@ export default {
 		.back-txt {
 			font-size: 16px;
 			color: #fff
-		}	
+		}
 	}
 </style>
