@@ -137,6 +137,7 @@ export default {
 			.ds(ib);
 			font-size: 14px;
 			.m(l,16px);
+			max-width: 200px;
 		}
 		.title{
 			margin: 2px 0 8px 0;
