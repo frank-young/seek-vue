@@ -311,7 +311,6 @@ export default {
 			}
 		}
 	}
-
 	.bg-image(@url){
 	  @src:~`@{url} + '@2x.png'`;
 	  background-image: url(@src);
